@@ -26,12 +26,12 @@ export class RestaurantController {
         return this.restaurantService.findOne(id);
     }
 
-    @Post()
+    @Post('/post')
     create(@Body() createRestaurantDto: CreateRestaurantDto) {
         return this.restaurantService.create(createRestaurantDto);
     }
 
-    @Patch()
+    @Patch('/edit/:id')
     update(
         @Param('id') id: number,
         @Body() updateRestaurantDto: UpdateRestaurantDto,
@@ -39,7 +39,7 @@ export class RestaurantController {
         return this.restaurantService.update(id, updateRestaurantDto);
     }
 
-    @Delete()
+    @Delete('/delete/:id')
     delete(@Body() deleteRestaurantDto: DeleteRestaurantDto) {
         return this.restaurantService.delete(deleteRestaurantDto);
     }

@@ -17,11 +17,20 @@ let RestaurantService = class RestaurantService {
     constructor(restaurantRepository) {
         this.restaurantRepository = restaurantRepository;
     }
-    create(data) {
-        return this.restaurantRepository.createAndSave(data);
+    create(createRestaurantDto) {
+        return this.restaurantRepository.createAndSave(createRestaurantDto);
     }
     findAll() {
         return this.restaurantRepository.findAll();
+    }
+    findOne(id) {
+        return this.restaurantRepository.findOneByIdOrFail(id);
+    }
+    update(id, updateRestaurantDto) {
+        return this.restaurantRepository.update(id, updateRestaurantDto);
+    }
+    delete(deleteRestaurantDto) {
+        return this.restaurantRepository.deleteByIdOrFail(deleteRestaurantDto.id);
     }
 };
 exports.RestaurantService = RestaurantService;

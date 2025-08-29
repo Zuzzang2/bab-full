@@ -26,7 +26,6 @@ let WeatherService = class WeatherService {
     async getCurrentWeather(lat, lon) {
         const serviceKey = this.config.get('WEATHER_API_KEY');
         const { nx, ny } = (0, convert_latlon_to_xy_1.dfs_xy_conv)(lat, lon);
-        console.log(nx, ny);
         const { baseDate, baseTime } = (0, weather_base_time_1.getBaseDateTime)();
         const url = `http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst`;
         const params = {

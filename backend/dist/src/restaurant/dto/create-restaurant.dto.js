@@ -15,6 +15,9 @@ class CreateRestaurantDto {
     name;
     category;
     address;
+    description;
+    phone;
+    menu;
 }
 exports.CreateRestaurantDto = CreateRestaurantDto;
 __decorate([
@@ -29,4 +32,20 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateRestaurantDto.prototype, "address", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreateRestaurantDto.prototype, "description", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreateRestaurantDto.prototype, "phone", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsArray)(),
+    __metadata("design:type", Array)
+], CreateRestaurantDto.prototype, "menu", void 0);
 //# sourceMappingURL=create-restaurant.dto.js.map

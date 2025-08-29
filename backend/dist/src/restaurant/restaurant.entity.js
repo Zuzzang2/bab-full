@@ -16,6 +16,9 @@ let RestaurantEntity = class RestaurantEntity {
     name;
     category;
     address;
+    description;
+    phone;
+    menu;
 };
 exports.RestaurantEntity = RestaurantEntity;
 __decorate([
@@ -34,6 +37,18 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], RestaurantEntity.prototype, "address", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
+    __metadata("design:type", String)
+], RestaurantEntity.prototype, "description", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 20, nullable: true }),
+    __metadata("design:type", String)
+], RestaurantEntity.prototype, "phone", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'text', array: true, nullable: true }),
+    __metadata("design:type", Array)
+], RestaurantEntity.prototype, "menu", void 0);
 exports.RestaurantEntity = RestaurantEntity = __decorate([
     (0, typeorm_1.Entity)('restaurants')
 ], RestaurantEntity);
