@@ -4,8 +4,6 @@ import axios from 'axios';
 import { getBaseDateTime } from '../../lib/weather/weather-base-time';
 import { dfs_xy_conv } from '../../lib/weather/convert-latlon-to-xy';
 
-// http://localhost:3000/weather?lat=37.3781&lon=127.1158 분당 임의 지정
-
 @Injectable()
 export class WeatherService {
     constructor(private config: ConfigService) {}
