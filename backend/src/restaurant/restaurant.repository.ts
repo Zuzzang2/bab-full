@@ -26,7 +26,7 @@ export class RestaurantRepository extends Repository<RestaurantEntity> {
         const restaurant = await this.findOne({ where: { id } });
 
         if (!restaurant) {
-            throw new NotFoundException('해당 맛집이 존재하지 않습니다.');
+            throw new NotFoundException('해당 맛집이 존재하지 않샤.');
         }
 
         return this.remove(restaurant);
