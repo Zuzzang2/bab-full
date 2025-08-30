@@ -12,7 +12,7 @@ export class RestaurantEntity {
     link: string;
 
     @Column({ nullable: true })
-    category: string; //  음식점>일식>일식당
+    category: string;
 
     @Column({ nullable: true })
     description: string;
