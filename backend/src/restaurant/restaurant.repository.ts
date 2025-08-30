@@ -14,10 +14,6 @@ export class RestaurantRepository extends Repository<RestaurantEntity> {
         return this.save(restaurant);
     }
 
-    async findAll(): Promise<RestaurantEntity[]> {
-        return this.find();
-    }
-
     async findOneByIdOrFail(id: number): Promise<RestaurantEntity> {
         const restaurant = await this.findOne({ where: { id } });
         if (!restaurant) {

@@ -23,9 +23,6 @@ let RestaurantRepository = class RestaurantRepository extends typeorm_1.Reposito
         const restaurant = this.create(data);
         return this.save(restaurant);
     }
-    async findAll() {
-        return this.find();
-    }
     async findOneByIdOrFail(id) {
         const restaurant = await this.findOne({ where: { id } });
         if (!restaurant) {

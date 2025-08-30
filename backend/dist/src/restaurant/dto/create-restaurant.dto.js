@@ -12,26 +12,31 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateRestaurantDto = void 0;
 const class_validator_1 = require("class-validator");
 class CreateRestaurantDto {
-    name;
+    title;
+    link;
     category;
-    address;
     description;
-    phone;
-    menu;
+    telephone;
+    address;
+    roadAddress;
+    mapx;
+    mapy;
 }
 exports.CreateRestaurantDto = CreateRestaurantDto;
 __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
-], CreateRestaurantDto.prototype, "name", void 0);
+], CreateRestaurantDto.prototype, "title", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreateRestaurantDto.prototype, "link", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreateRestaurantDto.prototype, "category", void 0);
-__decorate([
-    (0, class_validator_1.IsString)(),
-    __metadata("design:type", String)
-], CreateRestaurantDto.prototype, "address", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
@@ -41,11 +46,21 @@ __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
-], CreateRestaurantDto.prototype, "phone", void 0);
+], CreateRestaurantDto.prototype, "telephone", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsArray)(),
-    __metadata("design:type", Array)
-], CreateRestaurantDto.prototype, "menu", void 0);
+    __metadata("design:type", String)
+], CreateRestaurantDto.prototype, "address", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateRestaurantDto.prototype, "roadAddress", void 0);
+__decorate([
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], CreateRestaurantDto.prototype, "mapx", void 0);
+__decorate([
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], CreateRestaurantDto.prototype, "mapy", void 0);
 //# sourceMappingURL=create-restaurant.dto.js.map

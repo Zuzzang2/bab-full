@@ -1,13 +1,21 @@
 import { RestaurantService } from './restaurant.service';
-import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { DeleteRestaurantDto } from './dto/delete-restaurant.dto';
 export declare class RestaurantController {
     private readonly restaurantService;
     constructor(restaurantService: RestaurantService);
-    findAll(): Promise<import("./restaurant.entity").RestaurantEntity[]>;
-    findOne(id: number): Promise<import("./restaurant.entity").RestaurantEntity>;
-    create(createRestaurantDto: CreateRestaurantDto): Promise<import("./restaurant.entity").RestaurantEntity>;
+    search(title: string): Promise<any>;
+    find(title?: string, page?: string): Promise<{
+        total: number;
+        page: number;
+        pageSize: number;
+        data: import("./restaurant.entity").RestaurantEntity[];
+    }>;
+    create(location: string): Promise<{
+        count: number;
+        saved: import("./restaurant.entity").RestaurantEntity[];
+        skipped: number;
+    }>;
     update(id: number, updateRestaurantDto: UpdateRestaurantDto): Promise<import("typeorm").UpdateResult>;
     delete(deleteRestaurantDto: DeleteRestaurantDto): Promise<import("./restaurant.entity").RestaurantEntity>;
 }

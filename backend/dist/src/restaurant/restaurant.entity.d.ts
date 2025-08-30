@@ -1,9 +1,12 @@
 export declare class RestaurantEntity {
     id: number;
-    name: string;
+    title: string;
+    link: string;
     category: string;
+    description: string;
+    telephone: string;
     address: string;
-    description?: string;
-    phone?: string;
-    menu?: string[];
+    roadAddress: string;
+    mapx: number;
+    mapy: number;
 }

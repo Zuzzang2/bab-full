@@ -1,14 +1,16 @@
-import { IsArray, IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString, IsNumber } from 'class-validator';
 
 export class CreateRestaurantDto {
     @IsString()
-    name: string;
+    title: string;
 
     @IsString()
-    category: string;
+    @IsOptional()
+    link?: string;
 
     @IsString()
-    address: string;
+    @IsOptional()
+    category?: string;
 
     @IsString()
     @IsOptional()
@@ -16,10 +18,17 @@ export class CreateRestaurantDto {
 
     @IsString()
     @IsOptional()
-    phone?: string;
+    telephone?: string;
 
     @IsString()
-    @IsOptional()
-    @IsArray()
-    menu?: string[];
+    address: string;
+
+    @IsString()
+    roadAddress: string;
+
+    @IsNumber()
+    mapx: number;
+
+    @IsNumber()
+    mapy: number;
 }

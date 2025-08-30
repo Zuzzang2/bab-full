@@ -5,7 +5,6 @@ export declare class RestaurantRepository extends Repository<RestaurantEntity> {
     private readonly dataSource;
     constructor(dataSource: DataSource);
     createAndSave(data: CreateRestaurantDto): Promise<RestaurantEntity>;
-    findAll(): Promise<RestaurantEntity[]>;
     findOneByIdOrFail(id: number): Promise<RestaurantEntity>;
     deleteByIdOrFail(id: number): Promise<RestaurantEntity>;
 }

@@ -6,21 +6,29 @@ export class RestaurantEntity {
     id: number;
 
     @Column()
-    name: string;
+    title: string;
 
-    @Column({ default: '기타' }) // DB
-    category: string; // DTO
+    @Column({ nullable: true })
+    link: string;
+
+    @Column({ nullable: true })
+    category: string; //  음식점>일식>일식당
+
+    @Column({ nullable: true })
+    description: string;
+
+    @Column({ nullable: true })
+    telephone: string;
 
     @Column()
-    address: string;
+    address: string; // 지번 주소
 
-    @Column({ type: 'text', nullable: true })
-    description?: string;
+    @Column({ unique: true })
+    roadAddress: string; // 도로명 주소
 
-    @Column({ type: 'varchar', length: 20, nullable: true })
-    phone?: string;
+    @Column({ type: 'bigint' })
+    mapx: number; // X좌표 (경도)
 
-    @Column({ type: 'text', array: true, nullable: true })
-    // "menu1,menu2,menu3" 형태로 저장됨
-    menu?: string[];
+    @Column({ type: 'bigint' })
+    mapy: number; // Y좌표 (위도)
 }

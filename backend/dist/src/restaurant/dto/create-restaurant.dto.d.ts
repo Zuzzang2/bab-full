@@ -1,8 +1,11 @@
 export declare class CreateRestaurantDto {
-    name: string;
-    category: string;
-    address: string;
+    title: string;
+    link?: string;
+    category?: string;
     description?: string;
-    phone?: string;
-    menu?: string[];
+    telephone?: string;
+    address: string;
+    roadAddress: string;
+    mapx: number;
+    mapy: number;
 }

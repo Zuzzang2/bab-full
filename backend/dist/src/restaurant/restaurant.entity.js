@@ -13,12 +13,15 @@ exports.RestaurantEntity = void 0;
 const typeorm_1 = require("typeorm");
 let RestaurantEntity = class RestaurantEntity {
     id;
-    name;
+    title;
+    link;
     category;
-    address;
     description;
-    phone;
-    menu;
+    telephone;
+    address;
+    roadAddress;
+    mapx;
+    mapy;
 };
 exports.RestaurantEntity = RestaurantEntity;
 __decorate([
@@ -28,27 +31,39 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], RestaurantEntity.prototype, "name", void 0);
+], RestaurantEntity.prototype, "title", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ default: '기타' }),
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], RestaurantEntity.prototype, "link", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
 ], RestaurantEntity.prototype, "category", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], RestaurantEntity.prototype, "description", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], RestaurantEntity.prototype, "telephone", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], RestaurantEntity.prototype, "address", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
+    (0, typeorm_1.Column)({ unique: true }),
     __metadata("design:type", String)
-], RestaurantEntity.prototype, "description", void 0);
+], RestaurantEntity.prototype, "roadAddress", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', length: 20, nullable: true }),
-    __metadata("design:type", String)
-], RestaurantEntity.prototype, "phone", void 0);
+    (0, typeorm_1.Column)({ type: 'bigint' }),
+    __metadata("design:type", Number)
+], RestaurantEntity.prototype, "mapx", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'text', array: true, nullable: true }),
-    __metadata("design:type", Array)
-], RestaurantEntity.prototype, "menu", void 0);
+    (0, typeorm_1.Column)({ type: 'bigint' }),
+    __metadata("design:type", Number)
+], RestaurantEntity.prototype, "mapy", void 0);
 exports.RestaurantEntity = RestaurantEntity = __decorate([
     (0, typeorm_1.Entity)('restaurants')
 ], RestaurantEntity);

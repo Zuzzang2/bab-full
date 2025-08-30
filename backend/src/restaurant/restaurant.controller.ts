@@ -6,6 +6,7 @@ import {
     Param,
     Patch,
     Post,
+    Query,
 } from '@nestjs/common';
 import { RestaurantService } from './restaurant.service';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
@@ -16,19 +17,19 @@ import { DeleteRestaurantDto } from './dto/delete-restaurant.dto';
 export class RestaurantController {
     constructor(private readonly restaurantService: RestaurantService) {}
 
+    @Get('/search')
+    search(@Query('title') title: string) {
+        return this.restaurantService.search(title);
+    }
+
     @Get()
-    findAll() {
-        return this.restaurantService.findAll();
+    find(@Query('title') title?: string, @Query('page') page: string = '1') {
+        return this.restaurantService.find(title, Number(page));
     }
 
-    @Get(':id')
-    findOne(@Param('id') id: number) {
-        return this.restaurantService.findOne(id);
-    }
-
-    @Post('/post')
-    create(@Body() createRestaurantDto: CreateRestaurantDto) {
-        return this.restaurantService.create(createRestaurantDto);
+    @Post()
+    create(@Query('location') location: string) {
+        return this.restaurantService.create(location);
     }
 
     @Patch('/edit/:id')
