@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RestaurantEntity = void 0;
+const user_entity_1 = require("../users/user.entity");
 const typeorm_1 = require("typeorm");
 let RestaurantEntity = class RestaurantEntity {
     id;
@@ -22,6 +23,8 @@ let RestaurantEntity = class RestaurantEntity {
     roadAddress;
     mapx;
     mapy;
+    user;
+    userId;
 };
 exports.RestaurantEntity = RestaurantEntity;
 __decorate([
@@ -53,7 +56,7 @@ __decorate([
     __metadata("design:type", String)
 ], RestaurantEntity.prototype, "address", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ unique: true }),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], RestaurantEntity.prototype, "roadAddress", void 0);
 __decorate([
@@ -64,7 +67,17 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'bigint' }),
     __metadata("design:type", Number)
 ], RestaurantEntity.prototype, "mapy", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => user_entity_1.User, (user) => user.restaurants, { onDelete: 'CASCADE' }),
+    (0, typeorm_1.JoinColumn)({ name: 'userId' }),
+    __metadata("design:type", user_entity_1.User)
+], RestaurantEntity.prototype, "user", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], RestaurantEntity.prototype, "userId", void 0);
 exports.RestaurantEntity = RestaurantEntity = __decorate([
-    (0, typeorm_1.Entity)('restaurants')
+    (0, typeorm_1.Entity)('restaurants'),
+    (0, typeorm_1.Unique)(['userId', 'roadAddress'])
 ], RestaurantEntity);
 //# sourceMappingURL=restaurant.entity.js.map

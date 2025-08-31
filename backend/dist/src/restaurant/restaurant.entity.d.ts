@@ -1,3 +1,4 @@
+import { User } from 'src/users/user.entity';
 export declare class RestaurantEntity {
     id: number;
     title: string;
@@ -9,4 +10,6 @@ export declare class RestaurantEntity {
     roadAddress: string;
     mapx: number;
     mapy: number;
+    user: User;
+    userId: number;
 }

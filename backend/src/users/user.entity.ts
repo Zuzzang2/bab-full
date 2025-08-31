@@ -1,9 +1,10 @@
-// src/users/user.entity.ts
+import { RestaurantEntity } from 'src/restaurant/restaurant.entity';
 import {
     Entity,
     PrimaryGeneratedColumn,
     Column,
     CreateDateColumn,
+    OneToMany,
 } from 'typeorm';
 
 @Entity('users')
@@ -19,4 +20,7 @@ export class User {
 
     @CreateDateColumn()
     createdAt: Date;
+
+    @OneToMany(() => RestaurantEntity, (restaurant) => restaurant.user)
+    restaurants: RestaurantEntity[];
 }
