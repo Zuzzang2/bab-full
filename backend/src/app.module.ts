@@ -5,13 +5,16 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { WeatherModule } from './weather/weather.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RestaurantModule } from './restaurant/restaurant.module';
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './users/user.module';
 
 @Module({
     imports: [
         ConfigModule.forRoot({ isGlobal: true }),
         WeatherModule,
         RestaurantModule,
-
+        AuthModule,
+        UserModule,
         TypeOrmModule.forRootAsync({
             inject: [ConfigService],
             useFactory: (config: ConfigService) => ({

@@ -33,7 +33,7 @@ let RestaurantRepository = class RestaurantRepository extends typeorm_1.Reposito
     async deleteByIdOrFail(id) {
         const restaurant = await this.findOne({ where: { id } });
         if (!restaurant) {
-            throw new common_1.NotFoundException('해당 맛집이 존재하지 않습니다.');
+            throw new common_1.NotFoundException('해당 맛집이 존재하지 않습니다!');
         }
         return this.remove(restaurant);
     }
