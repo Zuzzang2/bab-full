@@ -1,17 +1,23 @@
 import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
+import Login from './pages/Auth/Login';
+import MyList from './pages/Restaurants/MyList';
+import Search from './pages/Restaurants/Serach';
+import SearchResults from './pages/Restaurants/SearchResult';
 
 function App() {
     const [count, setCount] = useState(0);
 
     return (
-        <div className="flex items-center justify-center h-screen bg-gray-100">
-            <h1 className="text-3xl font-bold text-blue-500">
-                Tailwind 연결 성공 🎉
-            </h1>
-        </div>
+        <BrowserRouter>
+            <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="/mylist" element={<MyList />} />
+                <Route path="/search" element={<Search />} />
+                <Route path="/results" element={<SearchResults />} />
+            </Routes>
+        </BrowserRouter>
     );
 }
 
