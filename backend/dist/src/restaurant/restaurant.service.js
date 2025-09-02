@@ -25,52 +25,22 @@ let RestaurantService = class RestaurantService {
         this.restaurantRepository = restaurantRepository;
         this.config = config;
     }
-    async create(location) {
-        const naverClientId = this.config.get('X_NAVER_CLIENT_ID');
-        const naverClientSecret = this.config.get('X_NAVER_CLIENT_SECRET');
-        const url = `https://openapi.naver.com/v1/search/local.json`;
-        const params = {
-            query: `${location}`,
-            display: 5,
-            start: 1,
-            sort: 'random',
-        };
-        const headers = {
-            'X-Naver-Client-Id': naverClientId,
-            'X-Naver-Client-Secret': naverClientSecret,
-        };
-        try {
-            const { data } = await axios_1.default.get(url, { params, headers });
-            const rawItems = data.items.map((item) => ({
-                title: item.title.replace(/<[^>]+>/g, ''),
-                link: item.link,
-                category: item.category,
-                description: item.description,
-                telephone: item.telephone,
-                address: item.address,
-                roadAddress: item.roadAddress,
-                mapx: Number(item.mapx),
-                mapy: Number(item.mapy),
-            }));
-            const existing = await this.restaurantRepository.find({
-                where: rawItems.map((item) => ({
-                    roadAddress: item.roadAddress,
-                })),
-            });
-            const existingRoadAddresses = new Set(existing.map((e) => e.roadAddress));
-            const newItems = rawItems.filter((item) => !existingRoadAddresses.has(item.roadAddress));
-            const newEntities = this.restaurantRepository.create(newItems);
-            await this.restaurantRepository.save(newEntities);
-            return {
-                count: newEntities.length,
-                saved: newEntities,
-                skipped: rawItems.length - newEntities.length,
-            };
+    async create(userId, createRestaurantDto) {
+        const { roadAddress } = createRestaurantDto;
+        const existing = await this.restaurantRepository.findOne({
+            where: {
+                roadAddress,
+                user: { id: userId },
+            },
+        });
+        if (existing) {
+            throw new common_1.ConflictException('이미 등록된 맛집입니다.');
         }
-        catch (error) {
-            console.error('네이버 API 호출 실패:', error.message);
-            throw new Error('네이버 로컬 검색 실패');
-        }
+        const restaurant = this.restaurantRepository.create({
+            ...createRestaurantDto,
+            user: { id: userId },
+        });
+        return await this.restaurantRepository.save(restaurant);
     }
     async search(title) {
         const naverClientId = this.config.get('X_NAVER_CLIENT_ID');
@@ -95,16 +65,35 @@ let RestaurantService = class RestaurantService {
             throw new Error('네이버 로컬 검색 실패');
         }
     }
-    async find(title, page = 1) {
+    async find(userId, title, page = 1, sort = 'latest') {
         const take = 5;
         const skip = (page - 1) * take;
-        const where = title ? { title: (0, typeorm_1.ILike)(`%${title}%`) } : {};
+        const where = {};
+        if (title) {
+            where.title = (0, typeorm_1.ILike)(`%${title}%`);
+        }
+        if (userId) {
+            where.userId = Number(userId);
+        }
+        let order;
+        switch (sort) {
+            case 'oldest':
+                order = { createdAt: 'ASC' };
+                break;
+            case 'title':
+                order = { title: 'ASC' };
+                break;
+            default:
+                order = { createdAt: 'DESC' };
+                break;
+        }
         const [restaurants, total] = await this.restaurantRepository.findAndCount({
             where,
             take,
             skip,
-            order: { id: 'ASC' },
+            order,
         });
+        console.log(restaurants);
         return {
             total,
             page,

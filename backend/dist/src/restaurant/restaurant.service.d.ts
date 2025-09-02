@@ -6,13 +6,9 @@ export declare class RestaurantService {
     private readonly restaurantRepository;
     private config;
     constructor(restaurantRepository: RestaurantRepository, config: ConfigService);
-    create(location: string): Promise<{
-        count: number;
-        saved: import("./restaurant.entity").RestaurantEntity[];
-        skipped: number;
-    }>;
+    create(userId: number, createRestaurantDto: CreateRestaurantDto): Promise<import("./restaurant.entity").RestaurantEntity>;
     search(title: string): Promise<any>;
-    find(title?: string, page?: number): Promise<{
+    find(userId?: string, title?: string, page?: number, sort?: string): Promise<{
         total: number;
         page: number;
         pageSize: number;

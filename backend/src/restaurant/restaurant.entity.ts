@@ -6,6 +6,7 @@ import {
     ManyToOne,
     JoinColumn,
     Unique,
+    CreateDateColumn,
 } from 'typeorm';
 
 @Entity('restaurants')
@@ -47,4 +48,7 @@ export class RestaurantEntity {
 
     @Column()
     userId: number;
+
+    @CreateDateColumn()
+    createdAt: Date;
 }

@@ -25,6 +25,7 @@ let RestaurantEntity = class RestaurantEntity {
     mapy;
     user;
     userId;
+    createdAt;
 };
 exports.RestaurantEntity = RestaurantEntity;
 __decorate([
@@ -76,6 +77,10 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", Number)
 ], RestaurantEntity.prototype, "userId", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)(),
+    __metadata("design:type", Date)
+], RestaurantEntity.prototype, "createdAt", void 0);
 exports.RestaurantEntity = RestaurantEntity = __decorate([
     (0, typeorm_1.Entity)('restaurants'),
     (0, typeorm_1.Unique)(['userId', 'roadAddress'])

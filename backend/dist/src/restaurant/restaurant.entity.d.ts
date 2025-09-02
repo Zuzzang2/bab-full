@@ -12,4 +12,5 @@ export declare class RestaurantEntity {
     mapy: number;
     user: User;
     userId: number;
+    createdAt: Date;
 }
