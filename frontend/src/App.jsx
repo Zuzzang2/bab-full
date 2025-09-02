@@ -3,15 +3,15 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Login from './pages/Auth/Login';
 import MyList from './pages/Restaurants/MyList';
-import Search from './pages/Restaurants/Serach';
+import Search from './pages/Restaurants/Search';
 import SearchResults from './pages/Restaurants/SearchResult';
+import Home from './pages/Home/Home';
 
 function App() {
-    const [count, setCount] = useState(0);
-
     return (
         <BrowserRouter>
             <Routes>
+                <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/mylist" element={<MyList />} />
                 <Route path="/search" element={<Search />} />

@@ -7,15 +7,31 @@ function SearchResults() {
     const query = params.get('query');
     const [results, setResults] = useState([]);
     const [error, setError] = useState('');
+    const [savedroadAddress, setSavedroadAddress] = useState([]);
 
+    // 저장된 맛집 roadAdress 먼저 불러오기
+    useEffect(() => {
+        const fetchSaved = async () => {
+            try {
+                const res = await api.get('/restaurants');
+                const roadAddress = res.data.data.map((r) => r.roadAddress);
+                setSavedroadAddress(roadAddress);
+            } catch (err) {
+                console.error('저장된 맛집 조회 실패:', err);
+            }
+        };
+        fetchSaved();
+    }, []);
+
+    // 검색 결과 가져오기
     useEffect(() => {
         const fetchResults = async () => {
             try {
                 const res = await api.get('/restaurants/search', {
                     params: { title: query },
                 });
-                console.log('검색 결과:', res.data);
-                setResults(res.data.items || []); // 네이버 API 구조
+                console.log('검색 결과:', res.data.items);
+                setResults(res.data.items || []);
             } catch (err) {
                 console.error(err);
                 setError('검색에 실패했습니다.');
@@ -24,6 +40,35 @@ function SearchResults() {
 
         if (query) fetchResults();
     }, [query]);
+
+    const handleAdd = async (item) => {
+        try {
+            const cleanTitle = item.title.replace(/<[^>]+>/g, '');
+            const payload = {
+                title: cleanTitle,
+                address: item.address,
+                roadAddress: item.roadAddress,
+                category: item.category,
+                description: item.description,
+                link: item.link,
+                telephone: item.telephone,
+                mapx: Number(item.mapx),
+                mapy: Number(item.mapy),
+            };
+
+            console.log('저장할 데이터:', payload);
+
+            await api.post('/restaurants', payload);
+
+            alert(`"${cleanTitle}"이(가) 저장되었습니다.`);
+
+            setSavedroadAddress((prev) => [...prev, roadAddress]); // 버튼 전환
+        } catch (err) {
+            console.error('저장 실패:', err);
+
+            alert(`저장에 실패했습니다. (에러코드 ${err.status})`);
+        }
+    };
 
     return (
         <div className="p-4 max-w-xl mx-auto">
@@ -34,15 +79,45 @@ function SearchResults() {
             {error && <p className="text-red-500">{error}</p>}
 
             <ul className="mt-4 space-y-2">
-                {results.map((r, i) => (
-                    <li key={i} className="border p-2 rounded">
-                        <p
-                            className="font-semibold"
-                            dangerouslySetInnerHTML={{ __html: r.title }}
-                        />
-                        <p className="text-sm text-gray-500">{r.roadAddress}</p>
-                    </li>
-                ))}
+                {results.map((r, i) => {
+                    const roadAddress = r.roadAddress;
+                    const isSaved = savedroadAddress.includes(roadAddress);
+
+                    return (
+                        <li
+                            key={i}
+                            className="border p-4 rounded flex justify-between items-start"
+                        >
+                            <div>
+                                <p
+                                    className="font-semibold"
+                                    dangerouslySetInnerHTML={{
+                                        __html: r.title,
+                                    }}
+                                />
+                                <p className="text-sm text-gray-500">
+                                    {r.roadAddress}
+                                </p>
+                            </div>
+
+                            {isSaved ? (
+                                <button
+                                    className="mt-2 px-3 py-1 bg-gray-400 text-white rounded cursor-not-allowed"
+                                    disabled
+                                >
+                                    저장 완료
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={() => handleAdd(r)}
+                                    className="mt-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                >
+                                    추가하기
+                                </button>
+                            )}
+                        </li>
+                    );
+                })}
             </ul>
         </div>
     );

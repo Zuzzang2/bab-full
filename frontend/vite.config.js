@@ -12,6 +12,27 @@ export default defineConfig(({ mode }) => {
                     target: env.VITE_API_URL,
                     changeOrigin: true,
                     rewrite: (path) => path.replace(/^\/api/, ''), //"/api" → "" 으로 바꿈
+                    configure: (proxy) => {
+                        proxy.on('proxyReq', (proxyReq, req) => {
+                            console.log('[proxyReq]', req.method, req.url);
+                        });
+                        proxy.on('proxyRes', (proxyRes, req) => {
+                            console.log(
+                                '[proxyRes]',
+                                req.method,
+                                req.url,
+                                proxyRes.statusCode,
+                            );
+                        });
+                        proxy.on('error', (err, req) => {
+                            console.error(
+                                '[proxyError]',
+                                req.method,
+                                req.url,
+                                err.message,
+                            );
+                        });
+                    },
                 },
             },
         },
