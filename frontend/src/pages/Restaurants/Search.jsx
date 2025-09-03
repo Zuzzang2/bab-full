@@ -13,8 +13,8 @@ function Search() {
 
     return (
         <div className="p-4 max-w-xl mx-auto">
-            <h2 className="text-xl font-bold mb-4">식당 검색</h2>
-            <p>정확한 검색 희망 시 네이버 지도 기준 상호명 입력</p>
+            <h2 className="text-xl font-bold mb-4">맛집 검색</h2>
+            <p>네이버 지도 기준 상호명을 정확히 입력해주세요.</p>
             <form onSubmit={handleSubmit}>
                 <input
                     className="border p-2 w-full mb-2"

@@ -62,7 +62,7 @@ function SearchResults() {
 
             alert(`"${cleanTitle}"이(가) 저장되었습니다.`);
 
-            setSavedroadAddress((prev) => [...prev, roadAddress]); // 버튼 전환
+            setSavedroadAddress((prev) => [...prev, item.roadAddress]); // 버튼 전환
         } catch (err) {
             console.error('저장 실패:', err);
 
