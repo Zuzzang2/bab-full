@@ -101,7 +101,7 @@ export class RestaurantService {
         return await this.restaurantRepository.save(restaurant);
     }
 
-    async search(title: string) {
+    async search(title: string, page: number) {
         const naverClientId = this.config.get('X_NAVER_CLIENT_ID');
         const naverClientSecret = this.config.get('X_NAVER_CLIENT_SECRET');
 
@@ -129,7 +129,7 @@ export class RestaurantService {
         }
     }
 
-    async find(
+    async findMyRestaurants(
         userId?: string,
         title?: string,
         page: number = 1,
@@ -167,7 +167,7 @@ export class RestaurantService {
                 skip,
                 order,
             });
-        console.log(restaurants);
+        // console.log(restaurants);
 
         return {
             total,
@@ -177,17 +177,21 @@ export class RestaurantService {
         };
     }
 
-    findOne(id: number) {
-        return this.restaurantRepository.findOneByIdOrFail(id);
-    }
+    async delete(userId: number, restaurantId: number) {
+        const restaurant = await this.restaurantRepository.findOne({
+            where: {
+                id: restaurantId,
+                user: { id: userId },
+            },
+        });
 
-    update(id: number, updateRestaurantDto: Partial<CreateRestaurantDto>) {
-        return this.restaurantRepository.update(id, updateRestaurantDto);
-    }
+        if (!restaurant) {
+            throw new NotFoundException(
+                '맛집을 찾을 수 없거나 권한이 없습니다.',
+            );
+        }
 
-    delete(deleteRestaurantDto: DeleteRestaurantDto) {
-        return this.restaurantRepository.deleteByIdOrFail(
-            deleteRestaurantDto.id,
-        );
+        await this.restaurantRepository.remove(restaurant);
+        return { message: '맛집이 삭제되었습니다.' };
     }
 }

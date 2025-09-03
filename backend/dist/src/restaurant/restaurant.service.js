@@ -42,7 +42,7 @@ let RestaurantService = class RestaurantService {
         });
         return await this.restaurantRepository.save(restaurant);
     }
-    async search(title) {
+    async search(title, page) {
         const naverClientId = this.config.get('X_NAVER_CLIENT_ID');
         const naverClientSecret = this.config.get('X_NAVER_CLIENT_SECRET');
         const url = `https://openapi.naver.com/v1/search/local.json`;
@@ -65,7 +65,7 @@ let RestaurantService = class RestaurantService {
             throw new Error('네이버 로컬 검색 실패');
         }
     }
-    async find(userId, title, page = 1, sort = 'latest') {
+    async findMyRestaurants(userId, title, page = 1, sort = 'latest') {
         const take = 5;
         const skip = (page - 1) * take;
         const where = {};
@@ -93,7 +93,6 @@ let RestaurantService = class RestaurantService {
             skip,
             order,
         });
-        console.log(restaurants);
         return {
             total,
             page,
@@ -101,14 +100,18 @@ let RestaurantService = class RestaurantService {
             data: restaurants,
         };
     }
-    findOne(id) {
-        return this.restaurantRepository.findOneByIdOrFail(id);
-    }
-    update(id, updateRestaurantDto) {
-        return this.restaurantRepository.update(id, updateRestaurantDto);
-    }
-    delete(deleteRestaurantDto) {
-        return this.restaurantRepository.deleteByIdOrFail(deleteRestaurantDto.id);
+    async delete(userId, restaurantId) {
+        const restaurant = await this.restaurantRepository.findOne({
+            where: {
+                id: restaurantId,
+                user: { id: userId },
+            },
+        });
+        if (!restaurant) {
+            throw new common_1.NotFoundException('맛집을 찾을 수 없거나 권한이 없습니다.');
+        }
+        await this.restaurantRepository.remove(restaurant);
+        return { message: '맛집이 삭제되었습니다.' };
     }
 };
 exports.RestaurantService = RestaurantService;

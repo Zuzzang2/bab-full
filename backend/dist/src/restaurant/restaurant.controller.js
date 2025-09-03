@@ -15,8 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RestaurantController = void 0;
 const common_1 = require("@nestjs/common");
 const restaurant_service_1 = require("./restaurant.service");
-const update_restaurant_dto_1 = require("./dto/update-restaurant.dto");
-const delete_restaurant_dto_1 = require("./dto/delete-restaurant.dto");
 const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
 const create_restaurant_dto_1 = require("./dto/create-restaurant.dto");
 let RestaurantController = class RestaurantController {
@@ -24,29 +22,28 @@ let RestaurantController = class RestaurantController {
     constructor(restaurantService) {
         this.restaurantService = restaurantService;
     }
-    search(title) {
-        return this.restaurantService.search(title);
+    search(title, page = '1') {
+        console.log;
+        return this.restaurantService.search(title, Number(page));
     }
-    find(req, title, page = '1', sort = 'latest') {
-        return this.restaurantService.find(req.user.userId, title, Number(page), sort);
+    findMyRestaurants(req, title, page = '1', sort = 'latest') {
+        return this.restaurantService.findMyRestaurants(req.user.userId, title, Number(page), sort);
     }
     create(req, createRestaurantDto) {
         console.log(createRestaurantDto);
         return this.restaurantService.create(req.user.userId, createRestaurantDto);
     }
-    update(id, updateRestaurantDto) {
-        return this.restaurantService.update(id, updateRestaurantDto);
-    }
-    delete(deleteRestaurantDto) {
-        return this.restaurantService.delete(deleteRestaurantDto);
+    delete(req, id) {
+        return this.restaurantService.delete(req.user.userId, id);
     }
 };
 exports.RestaurantController = RestaurantController;
 __decorate([
     (0, common_1.Get)('/search'),
     __param(0, (0, common_1.Query)('title')),
+    __param(1, (0, common_1.Query)('page')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", void 0)
 ], RestaurantController.prototype, "search", null);
 __decorate([
@@ -59,7 +56,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, String, String, String]),
     __metadata("design:returntype", void 0)
-], RestaurantController.prototype, "find", null);
+], RestaurantController.prototype, "findMyRestaurants", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Post)(),
@@ -70,18 +67,12 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], RestaurantController.prototype, "create", null);
 __decorate([
-    (0, common_1.Patch)('/edit/:id'),
-    __param(0, (0, common_1.Param)('id')),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, update_restaurant_dto_1.UpdateRestaurantDto]),
-    __metadata("design:returntype", void 0)
-], RestaurantController.prototype, "update", null);
-__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Delete)('/delete/:id'),
-    __param(0, (0, common_1.Body)()),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [delete_restaurant_dto_1.DeleteRestaurantDto]),
+    __metadata("design:paramtypes", [Object, Number]),
     __metadata("design:returntype", void 0)
 ], RestaurantController.prototype, "delete", null);
 exports.RestaurantController = RestaurantController = __decorate([

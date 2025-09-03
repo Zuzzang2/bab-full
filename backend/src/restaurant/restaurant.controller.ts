@@ -4,15 +4,13 @@ import {
     Delete,
     Get,
     Param,
-    Patch,
+    ParseIntPipe,
     Post,
     Query,
     Req,
     UseGuards,
 } from '@nestjs/common';
 import { RestaurantService } from './restaurant.service';
-import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
-import { DeleteRestaurantDto } from './dto/delete-restaurant.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 
@@ -21,19 +19,20 @@ export class RestaurantController {
     constructor(private readonly restaurantService: RestaurantService) {}
 
     @Get('/search')
-    search(@Query('title') title: string) {
-        return this.restaurantService.search(title);
+    search(@Query('title') title: string, @Query('page') page: string = '1') {
+        console.log;
+        return this.restaurantService.search(title, Number(page));
     }
 
     @UseGuards(JwtAuthGuard)
     @Get()
-    find(
+    findMyRestaurants(
         @Req() req,
         @Query('title') title?: string,
         @Query('page') page: string = '1',
         @Query('sort') sort: string = 'latest',
     ) {
-        return this.restaurantService.find(
+        return this.restaurantService.findMyRestaurants(
             req.user.userId,
             title,
             Number(page),
@@ -51,16 +50,9 @@ export class RestaurantController {
         );
     }
 
-    @Patch('/edit/:id')
-    update(
-        @Param('id') id: number,
-        @Body() updateRestaurantDto: UpdateRestaurantDto,
-    ) {
-        return this.restaurantService.update(id, updateRestaurantDto);
-    }
-
+    @UseGuards(JwtAuthGuard)
     @Delete('/delete/:id')
-    delete(@Body() deleteRestaurantDto: DeleteRestaurantDto) {
-        return this.restaurantService.delete(deleteRestaurantDto);
+    delete(@Req() req, @Param('id', ParseIntPipe) id: number) {
+        return this.restaurantService.delete(req.user.userId, id);
     }
 }
