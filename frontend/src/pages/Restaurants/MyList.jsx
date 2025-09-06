@@ -42,7 +42,7 @@ function MyList() {
         setSort(e.target.value);
     };
 
-    const fetchRestaurants = async (pageNumber, sortParam, title = '') => {
+    const fetchRestaurants = async (pageNumber, sortParam, title) => {
         try {
             const res = await api.get('/restaurants', {
                 params: { page: pageNumber, sort: sortParam, title: title },

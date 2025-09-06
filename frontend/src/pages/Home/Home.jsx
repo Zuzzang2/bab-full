@@ -5,6 +5,7 @@ function Home() {
 
     const pages = [
         { title: '내 맛집 리스트', path: '/mylist' },
+        { title: '회원가입', path: '/signup' },
         { title: '로그인', path: '/login' },
         { title: '맛집 검색', path: '/search' },
     ];

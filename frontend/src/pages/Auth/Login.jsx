@@ -17,9 +17,7 @@ function Login() {
                 password,
             });
 
-            const token = res.data.accessToken;
-
-            localStorage.setItem('token', token);
+            alert(res.data.message);
 
             navigate('/mylist');
         } catch (err) {
