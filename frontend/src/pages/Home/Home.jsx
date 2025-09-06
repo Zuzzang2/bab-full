@@ -11,7 +11,7 @@ function Home() {
     ];
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="max-w-screen-xl mx-auto px-4 min-h-screen flex items-center justify-center bg-gray-50">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full max-w-4xl p-6">
                 {pages.map((page) => (
                     <div

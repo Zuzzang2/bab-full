@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../../api/axiosInstance';
+import { useNavigate } from 'react-router-dom';
 
 function MyList() {
     const [restaurants, setRestaurants] = useState([]);
@@ -9,6 +10,7 @@ function MyList() {
     const [sort, setSort] = useState('latest');
     const [searchTerm, setSearchTerm] = useState('');
     const [inputValue, setInputValue] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
         setRestaurants([]);
@@ -117,7 +119,10 @@ function MyList() {
                             key={r.id}
                             className="p-2 border rounded flex justify-between items-center"
                         >
-                            <div>
+                            <div
+                                className="flex-1 cursor-pointer"
+                                onClick={() => navigate(`/mylist/${r.id}`)}
+                            >
                                 <p className="font-semibold">{r.title}</p>
                                 <p className="text-sm text-gray-500">
                                     {r.roadAddress}
