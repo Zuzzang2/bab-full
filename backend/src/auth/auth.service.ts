@@ -32,7 +32,7 @@ export class AuthService {
         const payload = { sub: user.id, email: user.email };
         const accessToken = this.jwtService.sign(payload, { expiresIn: '7d' });
 
-        return { message: '회원가입 성공', accessToken };
+        return accessToken;
     }
 
     async signin(dto: SigninDto) {
@@ -48,6 +48,6 @@ export class AuthService {
         const payload = { sub: user.id, email: user.email };
         const accessToken = this.jwtService.sign(payload, { expiresIn: '7d' });
 
-        return { accessToken };
+        return accessToken; // 쿠키에는 jwt문자열만 넣어야함.메세지는 따로 넣기.
     }
 }

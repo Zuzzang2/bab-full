@@ -23,7 +23,6 @@ let RestaurantController = class RestaurantController {
         this.restaurantService = restaurantService;
     }
     search(title, page = '1') {
-        console.log;
         return this.restaurantService.search(title, Number(page));
     }
     findMyRestaurants(req, title, page = '1', sort = 'latest') {

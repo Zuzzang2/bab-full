@@ -1,4 +1,5 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Res } from '@nestjs/common';
+import type { Response } from 'express';
 import { AuthService } from './auth.service';
 import { SignupDto } from './dto/signup.dto';
 import { SigninDto } from './dto/signin.dto';
@@ -8,13 +9,39 @@ export class AuthController {
     constructor(private authService: AuthService) {}
 
     @Post('signup')
-    signup(@Body() dto: SignupDto) {
-        console.log(dto);
-        return this.authService.signup(dto);
+    async signup(
+        @Res({ passthrough: true }) res: Response,
+        @Body() dto: SignupDto,
+    ) {
+        const token = await this.authService.signup(dto);
+
+        res.cookie('access_token', token, {
+            httpOnly: true,
+            // secure: false, // HTTPS 환경에서만..인데 sameSite 때문에 true
+            secure: true,
+            sameSite: 'none',
+            maxAge: 1000 * 60 * 60, // 1시간
+        });
+
+        return { message: '회원가입 성공!' };
     }
 
     @Post('signin')
-    login(@Body() dto: SigninDto) {
-        return this.authService.signin(dto);
+    async signin(
+        @Res({ passthrough: true }) res: Response,
+        @Body() dto: SigninDto,
+    ) {
+        const token = await this.authService.signin(dto);
+        console.log(token);
+
+        res.cookie('access_token', token, {
+            httpOnly: true,
+            // secure: false, // HTTPS 환경에서만..인데 sameSite 때문에 true
+            secure: true,
+            sameSite: 'none',
+            maxAge: 1000 * 60 * 60, // 1시간
+        });
+
+        return { message: '로그인 성공!' };
     }
 }

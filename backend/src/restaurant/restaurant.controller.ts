@@ -20,7 +20,6 @@ export class RestaurantController {
 
     @Get('/search')
     search(@Query('title') title: string, @Query('page') page: string = '1') {
-        console.log;
         return this.restaurantService.search(title, Number(page));
     }
 

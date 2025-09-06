@@ -42,7 +42,7 @@ let RestaurantService = class RestaurantService {
         });
         return await this.restaurantRepository.save(restaurant);
     }
-    async search(title, page) {
+    async search(title, page = 1) {
         const naverClientId = this.config.get('X_NAVER_CLIENT_ID');
         const naverClientSecret = this.config.get('X_NAVER_CLIENT_SECRET');
         const url = `https://openapi.naver.com/v1/search/local.json`;

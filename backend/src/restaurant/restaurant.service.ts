@@ -101,7 +101,7 @@ export class RestaurantService {
         return await this.restaurantRepository.save(restaurant);
     }
 
-    async search(title: string, page: number) {
+    async search(title: string, page: number = 1) {
         const naverClientId = this.config.get('X_NAVER_CLIENT_ID');
         const naverClientSecret = this.config.get('X_NAVER_CLIENT_SECRET');
 
