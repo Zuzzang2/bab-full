@@ -13,6 +13,7 @@ export declare class RestaurantService {
         pageSize: number;
         data: import("./restaurant.entity").RestaurantEntity[];
     }>;
+    RestaurantDetailById(id: number, userId: number): Promise<import("./restaurant.entity").RestaurantEntity>;
     delete(userId: number, restaurantId: number): Promise<{
         message: string;
     }>;

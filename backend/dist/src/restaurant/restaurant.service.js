@@ -100,6 +100,15 @@ let RestaurantService = class RestaurantService {
             data: restaurants,
         };
     }
+    async RestaurantDetailById(id, userId) {
+        const restaurant = await this.restaurantRepository.findOne({
+            where: { id, user: { id: userId } },
+        });
+        if (!restaurant) {
+            throw new common_1.NotFoundException('맛집을 찾을 수 없습니다.');
+        }
+        return restaurant;
+    }
     async delete(userId, restaurantId) {
         const restaurant = await this.restaurantRepository.findOne({
             where: {

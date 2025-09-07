@@ -28,8 +28,10 @@ let RestaurantController = class RestaurantController {
     findMyRestaurants(req, title, page = '1', sort = 'latest') {
         return this.restaurantService.findMyRestaurants(req.user.userId, title, Number(page), sort);
     }
+    RestaurantDetail(id, req) {
+        return this.restaurantService.RestaurantDetailById(id, req.user.userId);
+    }
     create(req, createRestaurantDto) {
-        console.log(createRestaurantDto);
         return this.restaurantService.create(req.user.userId, createRestaurantDto);
     }
     delete(req, id) {
@@ -56,6 +58,15 @@ __decorate([
     __metadata("design:paramtypes", [Object, String, String, String]),
     __metadata("design:returntype", void 0)
 ], RestaurantController.prototype, "findMyRestaurants", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Get)(':id'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __param(1, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:returntype", void 0)
+], RestaurantController.prototype, "RestaurantDetail", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Post)(),

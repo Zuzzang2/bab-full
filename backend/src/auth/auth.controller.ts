@@ -36,12 +36,23 @@ export class AuthController {
 
         res.cookie('access_token', token, {
             httpOnly: true,
-            // secure: false, // HTTPS 환경에서만..인데 sameSite 때문에 true
             secure: true,
             sameSite: 'none',
-            maxAge: 1000 * 60 * 60, // 1시간
+            maxAge: 1000 * 60 * 60,
         });
 
         return { message: '로그인 성공!' };
+    }
+
+    @Post('signout')
+    async signout(@Res({ passthrough: true }) res: Response) {
+        res.clearCookie('access_token', {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'none',
+            maxAge: 1000 * 60 * 60,
+        });
+
+        return { message: '로그아웃 성공!' };
     }
 }

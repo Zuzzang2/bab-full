@@ -121,7 +121,6 @@ export class RestaurantService {
 
         try {
             const { data } = await axios.get(url, { params, headers });
-            // console.log(data);
             return data;
         } catch (error) {
             console.error('네이버 API 호출 실패:', error.message);
@@ -167,7 +166,6 @@ export class RestaurantService {
                 skip,
                 order,
             });
-        // console.log(restaurants);
 
         return {
             total,
@@ -175,6 +173,18 @@ export class RestaurantService {
             pageSize: take,
             data: restaurants,
         };
+    }
+
+    async RestaurantDetailById(id: number, userId: number) {
+        const restaurant = await this.restaurantRepository.findOne({
+            where: { id, user: { id: userId } },
+        });
+
+        if (!restaurant) {
+            throw new NotFoundException('맛집을 찾을 수 없습니다.');
+        }
+
+        return restaurant;
     }
 
     async delete(userId: number, restaurantId: number) {

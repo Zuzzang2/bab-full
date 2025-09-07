@@ -40,9 +40,14 @@ export class RestaurantController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @Get(':id')
+    RestaurantDetail(@Param('id', ParseIntPipe) id: number, @Req() req) {
+        return this.restaurantService.RestaurantDetailById(id, req.user.userId);
+    }
+
+    @UseGuards(JwtAuthGuard)
     @Post()
     create(@Req() req, @Body() createRestaurantDto: CreateRestaurantDto) {
-        console.log(createRestaurantDto);
         return this.restaurantService.create(
             req.user.userId,
             createRestaurantDto,

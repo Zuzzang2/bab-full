@@ -10,6 +10,7 @@ export declare class RestaurantController {
         pageSize: number;
         data: import("./restaurant.entity").RestaurantEntity[];
     }>;
+    RestaurantDetail(id: number, req: any): Promise<import("./restaurant.entity").RestaurantEntity>;
     create(req: any, createRestaurantDto: CreateRestaurantDto): Promise<import("./restaurant.entity").RestaurantEntity>;
     delete(req: any, id: number): Promise<{
         message: string;
