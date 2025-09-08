@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import api from '../../api/axiosInstance';
 import { useNavigate } from 'react-router-dom';
+import { fetchRestaurants, deleteRestaurantById } from '../../api/restaurant';
 
 function MyList() {
     const [restaurants, setRestaurants] = useState([]);
@@ -19,7 +20,8 @@ function MyList() {
     }, [sort, searchTerm]);
 
     useEffect(() => {
-        fetchRestaurants(page, sort, searchTerm);
+        if (!hasMore) return;
+        loadRestaurants(page, sort, searchTerm);
     }, [page, sort, searchTerm]);
 
     const handleDelete = async (id) => {
@@ -27,8 +29,8 @@ function MyList() {
         if (!confirmDelete) return;
 
         try {
-            const res = await api.delete(`/restaurants/delete/${id}`);
-            alert(res.data.message);
+            const data = await deleteRestaurantById(id);
+            alert(data.message);
             setRestaurants((prev) => prev.filter((r) => r.id !== id));
         } catch (err) {
             console.error(err);
@@ -44,19 +46,20 @@ function MyList() {
         setSort(e.target.value);
     };
 
-    const fetchRestaurants = async (pageNumber, sortParam, title) => {
+    const loadRestaurants = async (pageNumber, sortParam, title) => {
         try {
-            const res = await api.get('/restaurants', {
-                params: { page: pageNumber, sort: sortParam, title: title },
+            const res = await fetchRestaurants({
+                page: pageNumber,
+                sort: sortParam,
+                title: title,
             });
 
-            const { total, page: currentPage, pageSize, data } = res.data;
-            console.log(res.data);
+            const { total, page, pageSize, data } = res;
 
             setRestaurants((prev) => [...prev, ...data]);
 
             const isLastPage =
-                data.length < pageSize || currentPage * pageSize >= total;
+                data.length < pageSize || page * pageSize >= total;
             if (isLastPage) {
                 setHasMore(false);
             }
@@ -65,7 +68,6 @@ function MyList() {
             setError('맛집 목록을 불러오는 데 실패했습니다.');
         }
     };
-
     return (
         <div className="max-w-lg mx-auto mt-10">
             <h2 className="text-xl font-bold mb-4">내 맛집 리스트</h2>

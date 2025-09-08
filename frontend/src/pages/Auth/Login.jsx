@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import api from '../../api/axiosInstance';
 import { useNavigate } from 'react-router-dom';
+import { loginUser } from '../../api/auth';
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -12,16 +13,10 @@ function Login() {
         e.preventDefault();
 
         try {
-            const res = await api.post('/auth/signin', {
-                email,
-                password,
-            });
-
-            alert(res.data.message);
-
+            const data = await loginUser(email, password);
+            alert(data.message);
             navigate('/');
         } catch (err) {
-            console.error(err);
             setError('로그인 실패. 이메일 또는 비밀번호를 확인하세요.');
         }
     };

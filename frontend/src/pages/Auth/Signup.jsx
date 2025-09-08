@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api/axiosInstance';
+import { signupUser } from '../../api/auth';
 
 export default function Signup() {
     const navigate = useNavigate();
@@ -19,16 +20,10 @@ export default function Signup() {
         }
 
         try {
-            const res = await api.post('/auth/signup', {
-                email,
-                password,
-            });
-
-            alert(res.data.message);
-
+            const data = await signupUser(email, password);
+            alert(data.message);
             navigate('/');
         } catch (err) {
-            console.error(err);
             setError('회원가입에 실패했습니다.');
         }
     };

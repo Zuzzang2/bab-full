@@ -14,7 +14,7 @@ function RestaurantDetail() {
                 const data = await fetchRestaurantDetailById(id);
                 setRestaurant(data);
             } catch (err) {
-                setError('맛집 정보를 불러오지 못했습니다.');
+                setError('맛집 정보를 불러오지 못했습니다.', err);
             }
         };
 

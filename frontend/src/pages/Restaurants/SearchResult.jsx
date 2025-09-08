@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import api from '../../api/axiosInstance';
+import { fetchMyRestaurants, searchRestaurants } from '../../api/restaurant';
 
 function SearchResults() {
     const [params] = useSearchParams();
@@ -13,11 +14,11 @@ function SearchResults() {
     useEffect(() => {
         const fetchSaved = async () => {
             try {
-                const res = await api.get('/restaurants');
-                const roadAddress = res.data.data.map((r) => r.roadAddress);
+                const data = await fetchMyRestaurants();
+                const roadAddress = data.map((r) => r.roadAddress);
                 setSavedroadAddress(roadAddress);
             } catch (err) {
-                console.error('저장된 맛집 조회 실패:', err);
+                setError('맛집 조회 실패:', err);
             }
         };
         fetchSaved();
@@ -27,11 +28,8 @@ function SearchResults() {
     useEffect(() => {
         const fetchResults = async () => {
             try {
-                const res = await api.get('/restaurants/search', {
-                    params: { title: query },
-                });
-                console.log('검색 결과:', res.data.items);
-                setResults(res.data.items || []);
+                const data = await searchRestaurants(query);
+                setResults(data);
             } catch (err) {
                 console.error(err);
                 setError('검색에 실패했습니다.');
