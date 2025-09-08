@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchRestaurantDetailById } from '../../api/restaurant';
-import KakaoMap from '../../components/KakaoMap';
+import { fetchRestaurantDetailById } from '@/api/restaurant';
+import KakaoMap from '@/components/KakaoMap';
 
 function RestaurantDetail() {
     const { id } = useParams();

@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import api from '../../api/axiosInstance';
-import { fetchMyRestaurants, searchRestaurants } from '../../api/restaurant';
+import {
+    addRestaurant,
+    fetchMyRestaurants,
+    searchRestaurants,
+} from '@/api/restaurant';
 
 function SearchResults() {
     const [params] = useSearchParams();
@@ -56,14 +59,12 @@ function SearchResults() {
 
             console.log('저장할 데이터:', payload);
 
-            await api.post('/restaurants', payload);
+            await addRestaurant(payload);
 
             alert(`"${cleanTitle}"이(가) 저장되었습니다.`);
-
             setSavedroadAddress((prev) => [...prev, item.roadAddress]); // 버튼 전환
         } catch (err) {
             console.error('저장 실패:', err);
-
             alert(`저장에 실패했습니다. (에러코드 ${err.status})`);
         }
     };

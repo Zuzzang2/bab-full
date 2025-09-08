@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../api/axiosInstance';
-import { fetchUser } from '../api/auth';
+import { fetchUser, logoutUser } from '@/api/auth';
 
 export default function NavBar() {
     const [user, setUser] = useState(null);
@@ -9,15 +8,19 @@ export default function NavBar() {
 
     useEffect(() => {
         const checkAuth = async () => {
-            const userData = await fetchUser();
-            setUser(userData);
+            try {
+                const userData = await fetchUser();
+                setUser(userData);
+            } catch (err) {
+                console.error('유저 정보를 불러오지 못했습니다:', err);
+            }
         };
         checkAuth();
     }, []);
 
     const handleLogout = async () => {
         try {
-            await api.post('/auth/signout');
+            await logoutUser();
             setUser(null);
             navigate('/');
         } catch (err) {

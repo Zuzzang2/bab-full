@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import api from '../../api/axiosInstance';
 import { useNavigate } from 'react-router-dom';
-import { fetchRestaurants, deleteRestaurantById } from '../../api/restaurant';
+import { fetchRestaurants, deleteRestaurantById } from '@/api/restaurant';
 
 function MyList() {
     const [restaurants, setRestaurants] = useState([]);
