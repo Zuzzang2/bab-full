@@ -1,15 +1,18 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchRestaurants, deleteRestaurantById } from '@/api/restaurant';
+import { Restaurant, RestaurantListResponse } from '@/types/restaurant';
+
+type SortType = 'latest' | 'oldest' | 'title';
 
 function MyList() {
-    const [restaurants, setRestaurants] = useState([]);
-    const [page, setPage] = useState(1);
-    const [error, setError] = useState('');
-    const [hasMore, setHasMore] = useState(true);
-    const [sort, setSort] = useState('latest');
-    const [searchTerm, setSearchTerm] = useState('');
-    const [inputValue, setInputValue] = useState('');
+    const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
+    const [page, setPage] = useState<number>(1);
+    const [error, setError] = useState<string>('');
+    const [hasMore, setHasMore] = useState<boolean>(true);
+    const [sort, setSort] = useState<SortType>('latest');
+    const [searchTerm, setSearchTerm] = useState<string>('');
+    const [inputValue, setInputValue] = useState<string>('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -23,7 +26,7 @@ function MyList() {
         loadRestaurants(page, sort, searchTerm);
     }, [page, sort, searchTerm]);
 
-    const handleDelete = async (id) => {
+    const handleDelete = async (id: number) => {
         const confirmDelete = window.confirm('정말 삭제하시겠습니까?');
         if (!confirmDelete) return;
 
@@ -41,13 +44,17 @@ function MyList() {
         setPage((prev) => prev + 1);
     };
 
-    const handleSortChange = (e) => {
-        setSort(e.target.value);
+    const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSort(e.target.value as SortType);
     };
 
-    const loadRestaurants = async (pageNumber, sortParam, title) => {
+    const loadRestaurants = async (
+        pageNumber: number,
+        sortParam: string,
+        title: string,
+    ) => {
         try {
-            const res = await fetchRestaurants({
+            const res: RestaurantListResponse = await fetchRestaurants({
                 page: pageNumber,
                 sort: sortParam,
                 title: title,

@@ -1,6 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
 
-function KakaoMap({ lat, lng }) {
+type KakaoMapProps = {
+    lat: string;
+    lng: string;
+};
+
+declare global {
+    interface Window {
+        kakao: any;
+    }
+}
+
+function KakaoMap({ lat, lng }: KakaoMapProps) {
     const mapRef = useRef(null);
     const [isScriptLoaded, setIsScriptLoaded] = useState(false);
 

@@ -5,7 +5,7 @@ function Search() {
     const [query, setQuery] = useState('');
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();
         if (!query.trim()) return;
         navigate(`/results?query=${encodeURIComponent(query)}`);

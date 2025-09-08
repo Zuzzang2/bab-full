@@ -1,6 +1,6 @@
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 
-const instance = axios.create({
+const instance: AxiosInstance = axios.create({
     baseURL: '/api',
     withCredentials: true, // 쿠키 항상 포함되도록 설정
 });

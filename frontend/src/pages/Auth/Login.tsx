@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { loginUser } from '@/api/auth';
 
 function Login() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [error, setError] = useState<string>('');
     const navigate = useNavigate();
 
-    const handleLogin = async (e) => {
+    const handleLogin: React.FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
 
         try {

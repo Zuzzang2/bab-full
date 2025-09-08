@@ -1,9 +1,14 @@
 import { useNavigate } from 'react-router-dom';
 
+type Page = {
+    title: string;
+    path: string;
+};
+
 function Home() {
     const navigate = useNavigate();
 
-    const pages = [
+    const pages: Page[] = [
         { title: '내 맛집 리스트', path: '/mylist' },
         { title: '회원가입', path: '/signup' },
         { title: '로그인', path: '/login' },

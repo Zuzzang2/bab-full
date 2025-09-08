@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchUser, logoutUser } from '@/api/auth';
+import { User } from '@/types/user';
 
 export default function NavBar() {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState<User | null>(null);
     const navigate = useNavigate();
 
     useEffect(() => {

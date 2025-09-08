@@ -2,19 +2,20 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchRestaurantDetailById } from '@/api/restaurant';
 import KakaoMap from '@/components/KakaoMap';
+import { Restaurant } from '@/types/restaurant';
 
 function RestaurantDetail() {
-    const { id } = useParams();
-    const [restaurant, setRestaurant] = useState(null);
-    const [error, setError] = useState('');
+    const { id } = useParams<{ id: string }>();
+    const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
+    const [error, setError] = useState<string>('');
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await fetchRestaurantDetailById(id);
+                const data = await fetchRestaurantDetailById(Number(id));
                 setRestaurant(data);
             } catch (err) {
-                setError('맛집 정보를 불러오지 못했습니다.', err);
+                setError('맛집 정보를 불러오지 못했습니다.');
             }
         };
 
@@ -23,7 +24,7 @@ function RestaurantDetail() {
 
     if (!restaurant) return <p>로딩 중...</p>;
 
-    function cutRoadAddress(address) {
+    function cutRoadAddress(address: string): string {
         // 1순위: 읍 or 면
         const eupMyeon = address.match(/^(.*?(읍|면))/);
         if (eupMyeon) return eupMyeon[0];

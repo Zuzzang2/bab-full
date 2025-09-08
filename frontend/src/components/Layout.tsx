@@ -1,6 +1,11 @@
+import { ReactNode } from 'react';
 import NavBar from '@/components/Navbar';
 
-export default function Layout({ children }) {
+type LayoutProps = {
+    children: ReactNode;
+};
+
+export default function Layout({ children }: LayoutProps) {
     return (
         <div className="min-h-screen flex flex-col">
             <NavBar />

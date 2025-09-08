@@ -5,12 +5,12 @@ import { signupUser } from '@/api/auth';
 export default function Signup() {
     const navigate = useNavigate();
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirm, setConfirm] = useState('');
-    const [error, setError] = useState('');
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [confirm, setConfirm] = useState<string>('');
+    const [error, setError] = useState<string>('');
 
-    const handleSignup = async (e) => {
+    const handleSignup: React.FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
 
         if (password !== confirm) {

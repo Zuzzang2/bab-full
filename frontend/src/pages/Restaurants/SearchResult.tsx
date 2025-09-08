@@ -5,13 +5,14 @@ import {
     fetchMyRestaurants,
     searchRestaurants,
 } from '@/api/restaurant';
+import { CreateRestaurantDto, Restaurant } from '@/types/restaurant';
 
 function SearchResults() {
     const [params] = useSearchParams();
     const query = params.get('query');
-    const [results, setResults] = useState([]);
-    const [error, setError] = useState('');
-    const [savedroadAddress, setSavedroadAddress] = useState([]);
+    const [results, setResults] = useState<Restaurant[]>([]);
+    const [error, setError] = useState<string>('');
+    const [savedroadAddress, setSavedroadAddress] = useState<string[]>([]);
 
     // 저장된 맛집 roadAdress 먼저 불러오기
     useEffect(() => {
@@ -21,7 +22,7 @@ function SearchResults() {
                 const roadAddress = data.map((r) => r.roadAddress);
                 setSavedroadAddress(roadAddress);
             } catch (err) {
-                setError('맛집 조회 실패:', err);
+                setError('맛집 조회 실패:');
             }
         };
         fetchSaved();
@@ -29,10 +30,12 @@ function SearchResults() {
 
     // 검색 결과 가져오기
     useEffect(() => {
+        if (!query) return;
+
         const fetchResults = async () => {
             try {
                 const data = await searchRestaurants(query);
-                setResults(data);
+                setResults(data.items);
             } catch (err) {
                 console.error(err);
                 setError('검색에 실패했습니다.');
@@ -42,10 +45,10 @@ function SearchResults() {
         if (query) fetchResults();
     }, [query]);
 
-    const handleAdd = async (item) => {
+    const handleAdd = async (item: Restaurant) => {
         try {
             const cleanTitle = item.title.replace(/<[^>]+>/g, '');
-            const payload = {
+            const payload: CreateRestaurantDto = {
                 title: cleanTitle,
                 address: item.address,
                 roadAddress: item.roadAddress,
@@ -63,7 +66,7 @@ function SearchResults() {
 
             alert(`"${cleanTitle}"이(가) 저장되었습니다.`);
             setSavedroadAddress((prev) => [...prev, item.roadAddress]); // 버튼 전환
-        } catch (err) {
+        } catch (err: any) {
             console.error('저장 실패:', err);
             alert(`저장에 실패했습니다. (에러코드 ${err.status})`);
         }
