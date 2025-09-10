@@ -20,7 +20,7 @@ export class AuthController {
             // secure: false, // HTTPS 환경에서만..인데 sameSite 때문에 true
             secure: true,
             sameSite: 'none',
-            maxAge: 1000 * 60 * 60, // 1시간
+            maxAge: 1000 * 60 * 60 * 24 * 7,
         });
 
         return { message: '회원가입 성공!' };
@@ -32,13 +32,12 @@ export class AuthController {
         @Body() dto: SigninDto,
     ) {
         const token = await this.authService.signin(dto);
-        console.log(token);
 
         res.cookie('access_token', token, {
             httpOnly: true,
             secure: true,
             sameSite: 'none',
-            maxAge: 1000 * 60 * 60,
+            maxAge: 1000 * 60 * 60 * 24 * 7,
         });
 
         return { message: '로그인 성공!' };
@@ -50,7 +49,7 @@ export class AuthController {
             httpOnly: true,
             secure: true,
             sameSite: 'none',
-            maxAge: 1000 * 60 * 60,
+            maxAge: 1000 * 60 * 60 * 24 * 7,
         });
 
         return { message: '로그아웃 성공!' };

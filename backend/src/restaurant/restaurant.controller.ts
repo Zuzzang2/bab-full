@@ -18,20 +18,25 @@ import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 export class RestaurantController {
     constructor(private readonly restaurantService: RestaurantService) {}
 
+    // 모든 맛집 검색
     @Get('/search')
-    search(@Query('title') title: string, @Query('page') page: string = '1') {
-        return this.restaurantService.search(title, Number(page));
+    searchAllRestaurants(
+        @Query('title') title: string,
+        @Query('page') page: string = '1',
+    ) {
+        return this.restaurantService.searchAllRestaurants(title, Number(page));
     }
 
+    // 내 맛집 리스트 조회
     @UseGuards(JwtAuthGuard)
-    @Get()
-    findMyRestaurants(
+    @Get('/my-list')
+    findMyRestaurantList(
         @Req() req,
         @Query('title') title?: string,
         @Query('page') page: string = '1',
         @Query('sort') sort: string = 'latest',
     ) {
-        return this.restaurantService.findMyRestaurants(
+        return this.restaurantService.findMyRestaurantList(
             req.user.userId,
             title,
             Number(page),
@@ -39,16 +44,30 @@ export class RestaurantController {
         );
     }
 
+    // 검색 중복 확인용
+    @UseGuards(JwtAuthGuard)
+    @Get('/check-saved')
+    findSavedByUserId(@Req() req) {
+        return this.restaurantService.findSavedByUserId(req.user.userId);
+    }
+
+    // 맛집 상세페이지
     @UseGuards(JwtAuthGuard)
     @Get(':id')
-    RestaurantDetail(@Param('id', ParseIntPipe) id: number, @Req() req) {
-        return this.restaurantService.RestaurantDetailById(id, req.user.userId);
+    findDetailByIdAndUserId(@Param('id', ParseIntPipe) id: number, @Req() req) {
+        return this.restaurantService.findDetailByIdAndUserId(
+            id,
+            req.user.userId,
+        );
     }
 
     @UseGuards(JwtAuthGuard)
     @Post()
-    create(@Req() req, @Body() createRestaurantDto: CreateRestaurantDto) {
-        return this.restaurantService.create(
+    createMyRestaurant(
+        @Req() req,
+        @Body() createRestaurantDto: CreateRestaurantDto,
+    ) {
+        return this.restaurantService.createMyRestaurant(
             req.user.userId,
             createRestaurantDto,
         );
@@ -56,7 +75,7 @@ export class RestaurantController {
 
     @UseGuards(JwtAuthGuard)
     @Delete('/delete/:id')
-    delete(@Req() req, @Param('id', ParseIntPipe) id: number) {
-        return this.restaurantService.delete(req.user.userId, id);
+    removeMyRestaurant(@Req() req, @Param('id', ParseIntPipe) id: number) {
+        return this.restaurantService.removeMyRestaurant(req.user.userId, id);
     }
 }

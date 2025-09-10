@@ -1,4 +1,5 @@
 import { RestaurantEntity } from 'src/restaurant/restaurant.entity';
+import { ListEntity } from 'src/lists/list.entity';
 import {
     Entity,
     PrimaryGeneratedColumn,
@@ -23,4 +24,7 @@ export class User {
 
     @OneToMany(() => RestaurantEntity, (restaurant) => restaurant.user)
     restaurants: RestaurantEntity[];
+
+    @OneToMany(() => ListEntity, (list) => list.user)
+    lists: ListEntity[];
 }

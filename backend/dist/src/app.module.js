@@ -16,6 +16,7 @@ const typeorm_1 = require("@nestjs/typeorm");
 const restaurant_module_1 = require("./restaurant/restaurant.module");
 const auth_module_1 = require("./auth/auth.module");
 const user_module_1 = require("./users/user.module");
+const list_module_1 = require("./lists/list.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -27,6 +28,7 @@ exports.AppModule = AppModule = __decorate([
             restaurant_module_1.RestaurantModule,
             auth_module_1.AuthModule,
             user_module_1.UserModule,
+            list_module_1.ListModule,
             typeorm_1.TypeOrmModule.forRootAsync({
                 inject: [config_1.ConfigService],
                 useFactory: (config) => ({

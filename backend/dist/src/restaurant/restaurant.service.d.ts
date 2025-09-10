@@ -5,16 +5,17 @@ export declare class RestaurantService {
     private readonly restaurantRepository;
     private config;
     constructor(restaurantRepository: RestaurantRepository, config: ConfigService);
-    create(userId: number, createRestaurantDto: CreateRestaurantDto): Promise<import("./restaurant.entity").RestaurantEntity>;
-    search(title: string, page?: number): Promise<any>;
-    findMyRestaurants(userId?: string, title?: string, page?: number, sort?: string): Promise<{
+    createMyRestaurant(userId: number, createRestaurantDto: CreateRestaurantDto): Promise<import("./restaurant.entity").RestaurantEntity>;
+    searchAllRestaurants(title: string, page?: number): Promise<any>;
+    findMyRestaurantList(userId?: string, title?: string, page?: number, sort?: string): Promise<{
         total: number;
         page: number;
         pageSize: number;
         data: import("./restaurant.entity").RestaurantEntity[];
     }>;
-    RestaurantDetailById(id: number, userId: number): Promise<import("./restaurant.entity").RestaurantEntity>;
-    delete(userId: number, restaurantId: number): Promise<{
+    findSavedByUserId(userId: number): Promise<import("./restaurant.entity").RestaurantEntity[]>;
+    findDetailByIdAndUserId(id: number, userId: number): Promise<import("./restaurant.entity").RestaurantEntity>;
+    removeMyRestaurant(userId: number, restaurantId: number): Promise<{
         message: string;
     }>;
 }

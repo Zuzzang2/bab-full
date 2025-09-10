@@ -25,7 +25,7 @@ let RestaurantService = class RestaurantService {
         this.restaurantRepository = restaurantRepository;
         this.config = config;
     }
-    async create(userId, createRestaurantDto) {
+    async createMyRestaurant(userId, createRestaurantDto) {
         const { roadAddress } = createRestaurantDto;
         const existing = await this.restaurantRepository.findOne({
             where: {
@@ -42,7 +42,7 @@ let RestaurantService = class RestaurantService {
         });
         return await this.restaurantRepository.save(restaurant);
     }
-    async search(title, page = 1) {
+    async searchAllRestaurants(title, page = 1) {
         const naverClientId = this.config.get('X_NAVER_CLIENT_ID');
         const naverClientSecret = this.config.get('X_NAVER_CLIENT_SECRET');
         const url = `https://openapi.naver.com/v1/search/local.json`;
@@ -65,7 +65,7 @@ let RestaurantService = class RestaurantService {
             throw new Error('네이버 로컬 검색 실패');
         }
     }
-    async findMyRestaurants(userId, title, page = 1, sort = 'latest') {
+    async findMyRestaurantList(userId, title, page = 1, sort = 'latest') {
         const take = 5;
         const skip = (page - 1) * take;
         const where = {};
@@ -100,7 +100,12 @@ let RestaurantService = class RestaurantService {
             data: restaurants,
         };
     }
-    async RestaurantDetailById(id, userId) {
+    async findSavedByUserId(userId) {
+        return this.restaurantRepository.find({
+            where: { userId },
+        });
+    }
+    async findDetailByIdAndUserId(id, userId) {
         const restaurant = await this.restaurantRepository.findOne({
             where: { id, user: { id: userId } },
         });
@@ -109,7 +114,7 @@ let RestaurantService = class RestaurantService {
         }
         return restaurant;
     }
-    async delete(userId, restaurantId) {
+    async removeMyRestaurant(userId, restaurantId) {
         const restaurant = await this.restaurantRepository.findOne({
             where: {
                 id: restaurantId,

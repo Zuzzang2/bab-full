@@ -22,20 +22,23 @@ let RestaurantController = class RestaurantController {
     constructor(restaurantService) {
         this.restaurantService = restaurantService;
     }
-    search(title, page = '1') {
-        return this.restaurantService.search(title, Number(page));
+    searchAllRestaurants(title, page = '1') {
+        return this.restaurantService.searchAllRestaurants(title, Number(page));
     }
-    findMyRestaurants(req, title, page = '1', sort = 'latest') {
-        return this.restaurantService.findMyRestaurants(req.user.userId, title, Number(page), sort);
+    findMyRestaurantList(req, title, page = '1', sort = 'latest') {
+        return this.restaurantService.findMyRestaurantList(req.user.userId, title, Number(page), sort);
     }
-    RestaurantDetail(id, req) {
-        return this.restaurantService.RestaurantDetailById(id, req.user.userId);
+    findSavedByUserId(req) {
+        return this.restaurantService.findSavedByUserId(req.user.userId);
     }
-    create(req, createRestaurantDto) {
-        return this.restaurantService.create(req.user.userId, createRestaurantDto);
+    findDetailByIdAndUserId(id, req) {
+        return this.restaurantService.findDetailByIdAndUserId(id, req.user.userId);
     }
-    delete(req, id) {
-        return this.restaurantService.delete(req.user.userId, id);
+    createMyRestaurant(req, createRestaurantDto) {
+        return this.restaurantService.createMyRestaurant(req.user.userId, createRestaurantDto);
+    }
+    removeMyRestaurant(req, id) {
+        return this.restaurantService.removeMyRestaurant(req.user.userId, id);
     }
 };
 exports.RestaurantController = RestaurantController;
@@ -46,10 +49,10 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", void 0)
-], RestaurantController.prototype, "search", null);
+], RestaurantController.prototype, "searchAllRestaurants", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, common_1.Get)(),
+    (0, common_1.Get)('/my-list'),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Query)('title')),
     __param(2, (0, common_1.Query)('page')),
@@ -57,7 +60,15 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, String, String, String]),
     __metadata("design:returntype", void 0)
-], RestaurantController.prototype, "findMyRestaurants", null);
+], RestaurantController.prototype, "findMyRestaurantList", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Get)('/check-saved'),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], RestaurantController.prototype, "findSavedByUserId", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Get)(':id'),
@@ -66,7 +77,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", void 0)
-], RestaurantController.prototype, "RestaurantDetail", null);
+], RestaurantController.prototype, "findDetailByIdAndUserId", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Post)(),
@@ -75,7 +86,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, create_restaurant_dto_1.CreateRestaurantDto]),
     __metadata("design:returntype", void 0)
-], RestaurantController.prototype, "create", null);
+], RestaurantController.prototype, "createMyRestaurant", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Delete)('/delete/:id'),
@@ -84,7 +95,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Number]),
     __metadata("design:returntype", void 0)
-], RestaurantController.prototype, "delete", null);
+], RestaurantController.prototype, "removeMyRestaurant", null);
 exports.RestaurantController = RestaurantController = __decorate([
     (0, common_1.Controller)('restaurants'),
     __metadata("design:paramtypes", [restaurant_service_1.RestaurantService])
