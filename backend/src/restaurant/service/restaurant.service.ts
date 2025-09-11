@@ -3,8 +3,8 @@ import {
     Injectable,
     NotFoundException,
 } from '@nestjs/common';
-import { RestaurantRepository } from './restaurant.repository';
-import { CreateRestaurantDto } from './dto/create-restaurant.dto';
+import { RestaurantRepository } from '../repository/restaurant.repository';
+import { CreateRestaurantDto } from '../dto/create-restaurant.dto';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 import { ILike } from 'typeorm';

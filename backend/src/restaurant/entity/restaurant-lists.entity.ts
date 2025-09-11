@@ -1,5 +1,5 @@
 import { User } from 'src/users/user.entity';
-import { ListRowEntity } from './list-row.entity';
+import { RestaurantListItemsEntity } from './restaurant-list-items';
 import {
     Entity,
     PrimaryGeneratedColumn,
@@ -10,13 +10,16 @@ import {
     CreateDateColumn,
 } from 'typeorm';
 
-@Entity('lists')
-export class ListEntity {
+@Entity('restaurant_lists')
+export class RestaurantListsEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column()
-    title: string; // 리스트 제목 (예: "데이트 맛집", "야식 리스트")
+    title: string; // 리스트 제목
+
+    @Column({ nullable: true })
+    description: string;
 
     @ManyToOne(() => User, (user) => user.lists, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'userId' })
@@ -25,8 +28,8 @@ export class ListEntity {
     @Column()
     userId: number;
 
-    @OneToMany(() => ListRowEntity, (row) => row.list)
-    rows: ListRowEntity[];
+    @OneToMany(() => RestaurantListItemsEntity, (item) => item.list)
+    items: RestaurantListItemsEntity[];
 
     @CreateDateColumn()
     createdAt: Date;

@@ -14,13 +14,21 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RestaurantController = void 0;
 const common_1 = require("@nestjs/common");
-const restaurant_service_1 = require("./restaurant.service");
+const restaurant_service_1 = require("./service/restaurant.service");
+const restaurant_lists_service_1 = require("./service/restaurant-lists.service");
+const restaurant_list_items_service_1 = require("./service/restaurant-list-items.service");
 const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
 const create_restaurant_dto_1 = require("./dto/create-restaurant.dto");
+const create_restaurant_lists_dto_1 = require("./dto/create-restaurant-lists.dto");
+const create_restaurant_list_items_dto_1 = require("./dto/create-restaurant-list-items.dto");
 let RestaurantController = class RestaurantController {
     restaurantService;
-    constructor(restaurantService) {
+    restaurantListsService;
+    restaurantListItemsService;
+    constructor(restaurantService, restaurantListsService, restaurantListItemsService) {
         this.restaurantService = restaurantService;
+        this.restaurantListsService = restaurantListsService;
+        this.restaurantListItemsService = restaurantListItemsService;
     }
     searchAllRestaurants(title, page = '1') {
         return this.restaurantService.searchAllRestaurants(title, Number(page));
@@ -39,6 +47,22 @@ let RestaurantController = class RestaurantController {
     }
     removeMyRestaurant(req, id) {
         return this.restaurantService.removeMyRestaurant(req.user.userId, id);
+    }
+    async findAllMyLists(req) {
+        const userId = req.user.userId;
+        return this.restaurantListsService.findAllListsByUser(userId);
+    }
+    async findMyList(req) {
+        const userId = req.user.userId;
+        return this.restaurantListsService.findMyListByUser(userId);
+    }
+    async createList(req, dto) {
+        const userId = req.user.userId;
+        return this.restaurantListsService.createList(dto, userId);
+    }
+    async createListRows(req, dto) {
+        const userId = req.user.userId;
+        return this.restaurantListItemsService.createListRows(dto, userId);
     }
 };
 exports.RestaurantController = RestaurantController;
@@ -71,7 +95,7 @@ __decorate([
 ], RestaurantController.prototype, "findSavedByUserId", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, common_1.Get)(':id'),
+    (0, common_1.Get)('/detail/:id'),
     __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
@@ -96,8 +120,40 @@ __decorate([
     __metadata("design:paramtypes", [Object, Number]),
     __metadata("design:returntype", void 0)
 ], RestaurantController.prototype, "removeMyRestaurant", null);
+__decorate([
+    (0, common_1.Get)('/lists/all'),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], RestaurantController.prototype, "findAllMyLists", null);
+__decorate([
+    (0, common_1.Get)('/lists/my'),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], RestaurantController.prototype, "findMyList", null);
+__decorate([
+    (0, common_1.Post)(),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, create_restaurant_lists_dto_1.CreateRestaurantListsDto]),
+    __metadata("design:returntype", Promise)
+], RestaurantController.prototype, "createList", null);
+__decorate([
+    (0, common_1.Post)('/lists/items'),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, create_restaurant_list_items_dto_1.CreateRestaurantListItemsDto]),
+    __metadata("design:returntype", Promise)
+], RestaurantController.prototype, "createListRows", null);
 exports.RestaurantController = RestaurantController = __decorate([
     (0, common_1.Controller)('restaurants'),
-    __metadata("design:paramtypes", [restaurant_service_1.RestaurantService])
+    __metadata("design:paramtypes", [restaurant_service_1.RestaurantService,
+        restaurant_lists_service_1.RestaurantListsService,
+        restaurant_list_items_service_1.RestaurantListItemsService])
 ], RestaurantController);
 //# sourceMappingURL=restaurant.controller.js.map

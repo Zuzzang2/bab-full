@@ -14,15 +14,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RestaurantService = void 0;
 const common_1 = require("@nestjs/common");
-const restaurant_repository_1 = require("./restaurant.repository");
+const restaurant_repository_1 = require("./repository/restaurant.repository");
+const restaurant_lists_repository_1 = require("./repository/restaurant-lists.repository");
+const restaurant_list_items_repository_1 = require("./repository/restaurant-list-items.repository");
 const config_1 = require("@nestjs/config");
 const axios_1 = __importDefault(require("axios"));
 const typeorm_1 = require("typeorm");
 let RestaurantService = class RestaurantService {
     restaurantRepository;
+    restaurantListsRepository;
+    restaurantListItemsRepository;
     config;
-    constructor(restaurantRepository, config) {
+    constructor(restaurantRepository, restaurantListsRepository, restaurantListItemsRepository, config) {
         this.restaurantRepository = restaurantRepository;
+        this.restaurantListsRepository = restaurantListsRepository;
+        this.restaurantListItemsRepository = restaurantListItemsRepository;
         this.config = config;
     }
     async createMyRestaurant(userId, createRestaurantDto) {
@@ -132,6 +138,8 @@ exports.RestaurantService = RestaurantService;
 exports.RestaurantService = RestaurantService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [restaurant_repository_1.RestaurantRepository,
+        restaurant_lists_repository_1.RestaurantListsRepository,
+        restaurant_list_items_repository_1.RestaurantListItemsRepository,
         config_1.ConfigService])
 ], RestaurantService);
 //# sourceMappingURL=restaurant.service.js.map

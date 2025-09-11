@@ -7,7 +7,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { RestaurantModule } from './restaurant/restaurant.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './users/user.module';
-import { ListModule } from './lists/list.module';
 
 @Module({
     imports: [
@@ -16,7 +15,6 @@ import { ListModule } from './lists/list.module';
         RestaurantModule,
         AuthModule,
         UserModule,
-        ListModule,
         TypeOrmModule.forRootAsync({
             inject: [ConfigService],
             useFactory: (config: ConfigService) => ({

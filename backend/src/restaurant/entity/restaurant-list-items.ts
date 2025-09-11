@@ -1,5 +1,5 @@
-import { ListEntity } from './list.entity';
-import { RestaurantEntity } from '../restaurant/restaurant.entity';
+import { RestaurantListsEntity } from './restaurant-lists.entity';
+import { RestaurantEntity } from './restaurant.entity';
 import {
     Entity,
     PrimaryGeneratedColumn,
@@ -10,15 +10,17 @@ import {
     Unique,
 } from 'typeorm';
 
-@Entity('list_rows')
+@Entity('restaurant_list_items')
 @Unique(['listId', 'restaurantId']) // 리스트+식당 조합 유니크
-export class ListRowEntity {
+export class RestaurantListItemsEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(() => ListEntity, (list) => list.rows, { onDelete: 'CASCADE' })
+    @ManyToOne(() => RestaurantListsEntity, (list) => list.items, {
+        onDelete: 'CASCADE',
+    })
     @JoinColumn({ name: 'listId' })
-    list: ListEntity;
+    list: RestaurantEntity;
 
     @Column()
     listId: number;

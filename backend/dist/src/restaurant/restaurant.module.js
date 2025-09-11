@@ -8,19 +8,38 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RestaurantModule = void 0;
 const common_1 = require("@nestjs/common");
-const restaurant_service_1 = require("./restaurant.service");
+const restaurant_service_1 = require("./service/restaurant.service");
 const restaurant_controller_1 = require("./restaurant.controller");
 const typeorm_1 = require("@nestjs/typeorm");
-const restaurant_entity_1 = require("./restaurant.entity");
-const restaurant_repository_1 = require("./restaurant.repository");
+const restaurant_entity_1 = require("./entity/restaurant.entity");
+const restaurant_repository_1 = require("./repository/restaurant.repository");
+const restaurant_lists_entity_1 = require("./entity/restaurant-lists.entity");
+const restaurant_list_items_1 = require("./entity/restaurant-list-items");
+const restaurant_lists_service_1 = require("./service/restaurant-lists.service");
+const restaurant_list_items_service_1 = require("./service/restaurant-list-items.service");
+const restaurant_lists_repository_1 = require("./repository/restaurant-lists.repository");
+const restaurant_list_items_repository_1 = require("./repository/restaurant-list-items.repository");
 let RestaurantModule = class RestaurantModule {
 };
 exports.RestaurantModule = RestaurantModule;
 exports.RestaurantModule = RestaurantModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([restaurant_entity_1.RestaurantEntity])],
+        imports: [
+            typeorm_1.TypeOrmModule.forFeature([
+                restaurant_entity_1.RestaurantEntity,
+                restaurant_lists_entity_1.RestaurantListsEntity,
+                restaurant_list_items_1.RestaurantListItemsEntity,
+            ]),
+        ],
         controllers: [restaurant_controller_1.RestaurantController],
-        providers: [restaurant_service_1.RestaurantService, restaurant_repository_1.RestaurantRepository],
+        providers: [
+            restaurant_service_1.RestaurantService,
+            restaurant_lists_service_1.RestaurantListsService,
+            restaurant_list_items_service_1.RestaurantListItemsService,
+            restaurant_repository_1.RestaurantRepository,
+            restaurant_lists_repository_1.RestaurantListsRepository,
+            restaurant_list_items_repository_1.RestaurantListItemsRepository,
+        ],
     })
 ], RestaurantModule);
 //# sourceMappingURL=restaurant.module.js.map

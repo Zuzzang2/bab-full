@@ -7,7 +7,9 @@ import {
     JoinColumn,
     Unique,
     CreateDateColumn,
+    OneToMany,
 } from 'typeorm';
+import { RestaurantListItemsEntity } from './restaurant-list-items';
 
 @Entity('restaurants')
 @Unique(['userId', 'roadAddress'])
@@ -48,6 +50,9 @@ export class RestaurantEntity {
 
     @Column()
     userId: number;
+
+    @OneToMany(() => RestaurantListItemsEntity, (row) => row.list)
+    rows: RestaurantListItemsEntity[];
 
     @CreateDateColumn()
     createdAt: Date;
