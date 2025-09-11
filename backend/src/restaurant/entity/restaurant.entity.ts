@@ -51,8 +51,8 @@ export class RestaurantEntity {
     @Column()
     userId: number;
 
-    @OneToMany(() => RestaurantListItemsEntity, (row) => row.list)
-    rows: RestaurantListItemsEntity[];
+    @OneToMany(() => RestaurantListItemsEntity, (item) => item.list)
+    itmes: RestaurantListItemsEntity[];
 
     @CreateDateColumn()
     createdAt: Date;

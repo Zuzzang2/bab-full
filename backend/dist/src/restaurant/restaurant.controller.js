@@ -33,9 +33,6 @@ let RestaurantController = class RestaurantController {
     searchAllRestaurants(title, page = '1') {
         return this.restaurantService.searchAllRestaurants(title, Number(page));
     }
-    findMyRestaurantList(req, title, page = '1', sort = 'latest') {
-        return this.restaurantService.findMyRestaurantList(req.user.userId, title, Number(page), sort);
-    }
     findSavedByUserId(req) {
         return this.restaurantService.findSavedByUserId(req.user.userId);
     }
@@ -60,9 +57,14 @@ let RestaurantController = class RestaurantController {
         const userId = req.user.userId;
         return this.restaurantListsService.createList(dto, userId);
     }
-    async createListRows(req, dto) {
-        const userId = req.user.userId;
-        return this.restaurantListItemsService.createListRows(dto, userId);
+    async addRestaurantToList(req, listId, dto) {
+        return this.restaurantListItemsService.createListItem({ ...dto, listId }, req.user.userId);
+    }
+    findMyRestaurantList(req, title, page = '1', sort = 'latest') {
+        return this.restaurantService.findMyRestaurantList(req.user.userId, title, Number(page), sort);
+    }
+    findMyRestaurantListItem(req, title, page = '1', sort = 'latest') {
+        return this.restaurantService.findMyRestaurantListItem(req.user.userId, title, Number(page), sort);
     }
 };
 exports.RestaurantController = RestaurantController;
@@ -74,17 +76,6 @@ __decorate([
     __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", void 0)
 ], RestaurantController.prototype, "searchAllRestaurants", null);
-__decorate([
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, common_1.Get)('/my-list'),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Query)('title')),
-    __param(2, (0, common_1.Query)('page')),
-    __param(3, (0, common_1.Query)('sort')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String, String, String]),
-    __metadata("design:returntype", void 0)
-], RestaurantController.prototype, "findMyRestaurantList", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Get)('/check-saved'),
@@ -122,20 +113,23 @@ __decorate([
 ], RestaurantController.prototype, "removeMyRestaurant", null);
 __decorate([
     (0, common_1.Get)('/lists/all'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], RestaurantController.prototype, "findAllMyLists", null);
 __decorate([
-    (0, common_1.Get)('/lists/my'),
+    (0, common_1.Get)('/lists/my-list'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], RestaurantController.prototype, "findMyList", null);
 __decorate([
-    (0, common_1.Post)(),
+    (0, common_1.Post)('/list'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -143,13 +137,37 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], RestaurantController.prototype, "createList", null);
 __decorate([
-    (0, common_1.Post)('/lists/items'),
+    (0, common_1.Post)('/list/:listId/items'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Body)()),
+    __param(1, (0, common_1.Param)('listId')),
+    __param(2, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, create_restaurant_list_items_dto_1.CreateRestaurantListItemsDto]),
+    __metadata("design:paramtypes", [Object, Number, create_restaurant_list_items_dto_1.CreateRestaurantListItemsDto]),
     __metadata("design:returntype", Promise)
-], RestaurantController.prototype, "createListRows", null);
+], RestaurantController.prototype, "addRestaurantToList", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Get)('/lists/my-list'),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Query)('title')),
+    __param(2, (0, common_1.Query)('page')),
+    __param(3, (0, common_1.Query)('sort')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String, String, String]),
+    __metadata("design:returntype", void 0)
+], RestaurantController.prototype, "findMyRestaurantList", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Get)('/lists/my-list'),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Query)('title')),
+    __param(2, (0, common_1.Query)('page')),
+    __param(3, (0, common_1.Query)('sort')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String, String, String]),
+    __metadata("design:returntype", void 0)
+], RestaurantController.prototype, "findMyRestaurantListItem", null);
 exports.RestaurantController = RestaurantController = __decorate([
     (0, common_1.Controller)('restaurants'),
     __metadata("design:paramtypes", [restaurant_service_1.RestaurantService,

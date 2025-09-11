@@ -10,12 +10,6 @@ export declare class RestaurantController {
     private readonly restaurantListItemsService;
     constructor(restaurantService: RestaurantService, restaurantListsService: RestaurantListsService, restaurantListItemsService: RestaurantListItemsService);
     searchAllRestaurants(title: string, page?: string): Promise<any>;
-    findMyRestaurantList(req: any, title?: string, page?: string, sort?: string): Promise<{
-        total: number;
-        page: number;
-        pageSize: number;
-        data: import("./entity/restaurant.entity").RestaurantEntity[];
-    }>;
     findSavedByUserId(req: any): Promise<import("./entity/restaurant.entity").RestaurantEntity[]>;
     findDetailByIdAndUserId(id: number, req: any): Promise<import("./entity/restaurant.entity").RestaurantEntity>;
     createMyRestaurant(req: any, createRestaurantDto: CreateRestaurantDto): Promise<import("./entity/restaurant.entity").RestaurantEntity>;
@@ -33,5 +27,17 @@ export declare class RestaurantController {
         message: string;
         statusCode: number;
     }>;
-    createListRows(req: any, dto: CreateRestaurantListItemsDto): Promise<import("./entity/restaurant-list-items").RestaurantListItemsEntity>;
+    addRestaurantToList(req: any, listId: number, dto: CreateRestaurantListItemsDto): Promise<import("./entity/restaurant-list-items").RestaurantListItemsEntity>;
+    findMyRestaurantList(req: any, title?: string, page?: string, sort?: string): Promise<{
+        total: number;
+        page: number;
+        pageSize: number;
+        data: import("./entity/restaurant.entity").RestaurantEntity[];
+    }>;
+    findMyRestaurantListItem(req: any, title?: string, page?: string, sort?: string): Promise<{
+        total: number;
+        page: number;
+        pageSize: number;
+        data: import("./entity/restaurant.entity").RestaurantEntity[];
+    }>;
 }

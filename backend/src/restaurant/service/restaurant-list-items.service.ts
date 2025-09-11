@@ -12,7 +12,7 @@ export class RestaurantListItemsService {
         private readonly restaurantRepo: RestaurantRepository,
     ) {}
 
-    async createListRows(dto: CreateRestaurantListItemsDto, userId: number) {
+    async createListItem(dto: CreateRestaurantListItemsDto, userId: number) {
         const list = await this.restaurantListsRepo.findOne({
             where: { userId, id: dto.listId },
             select: ['id'],

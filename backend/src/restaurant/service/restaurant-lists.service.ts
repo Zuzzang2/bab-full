@@ -6,6 +6,7 @@ import { CreateRestaurantListsDto } from '../dto/create-restaurant-lists.dto';
 export class RestaurantListsService {
     constructor(
         private readonly restaurantListsRepo: RestaurantListsRepository,
+        private readonly restaurantListItemsRepo: RestaurantListsRepository,
     ) {}
 
     // 리스트 생성

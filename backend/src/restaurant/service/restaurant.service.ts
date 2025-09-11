@@ -115,6 +115,55 @@ export class RestaurantService {
         };
     }
 
+    async findMyRestaurantListItem(
+        userId: string,
+        title?: string,
+        page: number = 1,
+        sort: string = 'latest',
+    ) {
+        const take = 5;
+        const skip = (page - 1) * take;
+
+        // 정렬 조건
+        let order: any;
+        switch (sort) {
+            case 'oldest':
+                order = { createdAt: 'ASC' };
+                break;
+            case 'title':
+                order = { name: 'ASC' }; // 레스토랑 이름 기준 정렬
+                break;
+            default:
+                order = { createdAt: 'DESC' };
+                break;
+        }
+
+        // 쿼리빌더로 조인 (ListItem 통해 userId 필터링)
+        const qb = this.restaurantRepository
+            .createQueryBuilder('restaurant')
+            .innerJoin('restaurant.items', 'listItem')
+            .innerJoin('listItem.list', 'list', 'list.userId = :userId', {
+                userId: Number(userId),
+            });
+
+        if (title) {
+            qb.andWhere('restaurant.name ILIKE :title', {
+                title: `%${title}%`,
+            });
+        }
+
+        qb.orderBy(order).take(take).skip(skip);
+
+        const [restaurants, total] = await qb.getManyAndCount();
+
+        return {
+            total, // 전체 맛집 개수
+            page, // 현재 페이지
+            pageSize: take,
+            data: restaurants, // 5개 단위 맛집 데이터
+        };
+    }
+
     async findSavedByUserId(userId: number) {
         return this.restaurantRepository.find({
             where: { userId },
