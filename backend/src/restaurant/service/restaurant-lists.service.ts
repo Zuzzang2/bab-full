@@ -24,17 +24,4 @@ export class RestaurantListsService {
         });
         return { data: lists, message: '리스트 조회 성공', statusCode: 200 };
     }
-
-    async findMyListByUser(userId: number) {
-        const list = await this.restaurantListsRepo
-            .createQueryBuilder('list')
-            .leftJoinAndSelect('list.rows', 'rows') // 중간 테이블
-            .leftJoinAndSelect('rows.restaurant', 'restaurant') // 실제 식당 테이블
-            .where('list.userId = :userId', { userId })
-            .orderBy('list.createdAt', 'DESC')
-            .getMany();
-        console.log(list);
-
-        return list;
-    }
 }

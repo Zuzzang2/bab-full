@@ -36,35 +36,28 @@ let RestaurantController = class RestaurantController {
     findSavedByUserId(req) {
         return this.restaurantService.findSavedByUserId(req.user.userId);
     }
-    findDetailByIdAndUserId(id, req) {
-        return this.restaurantService.findDetailByIdAndUserId(id, req.user.userId);
-    }
-    createMyRestaurant(req, createRestaurantDto) {
-        return this.restaurantService.createMyRestaurant(req.user.userId, createRestaurantDto);
-    }
-    removeMyRestaurant(req, id) {
-        return this.restaurantService.removeMyRestaurant(req.user.userId, id);
+    async addRestaurantToList(req, listId, dto) {
+        return this.restaurantListItemsService.createListItem({ ...dto }, req.user.userId, listId);
     }
     async findAllMyLists(req) {
         const userId = req.user.userId;
         return this.restaurantListsService.findAllListsByUser(userId);
     }
-    async findMyList(req) {
-        const userId = req.user.userId;
-        return this.restaurantListsService.findMyListByUser(userId);
-    }
     async createList(req, dto) {
         const userId = req.user.userId;
         return this.restaurantListsService.createList(dto, userId);
     }
-    async addRestaurantToList(req, listId, dto) {
-        return this.restaurantListItemsService.createListItem({ ...dto, listId }, req.user.userId);
+    findDetailByIdAndUserId(id, req) {
+        return this.restaurantService.findDetailByIdAndUserId(id, req.user.userId);
     }
-    findMyRestaurantList(req, title, page = '1', sort = 'latest') {
-        return this.restaurantService.findMyRestaurantList(req.user.userId, title, Number(page), sort);
+    removeMyRestaurant(req, id) {
+        return this.restaurantService.removeMyRestaurant(req.user.userId, id);
     }
-    findMyRestaurantListItem(req, title, page = '1', sort = 'latest') {
-        return this.restaurantService.findMyRestaurantListItem(req.user.userId, title, Number(page), sort);
+    findMyRestaurantListItems(req, title, page = '1', sort = 'latest') {
+        return this.restaurantService.findMyRestaurantListItems(req.user.userId, title, Number(page), sort);
+    }
+    createMyRestaurant(req, createRestaurantDto) {
+        return this.restaurantService.createMyRestaurant(req.user.userId, createRestaurantDto);
     }
 };
 exports.RestaurantController = RestaurantController;
@@ -78,55 +71,30 @@ __decorate([
 ], RestaurantController.prototype, "searchAllRestaurants", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, common_1.Get)('/check-saved'),
+    (0, common_1.Get)('/check-duplicate'),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], RestaurantController.prototype, "findSavedByUserId", null);
 __decorate([
+    (0, common_1.Post)('/list/:listId'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, common_1.Get)('/detail/:id'),
-    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
-    __param(1, (0, common_1.Req)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Object]),
-    __metadata("design:returntype", void 0)
-], RestaurantController.prototype, "findDetailByIdAndUserId", null);
-__decorate([
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, common_1.Post)(),
     __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Body)()),
+    __param(1, (0, common_1.Param)('listId')),
+    __param(2, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, create_restaurant_dto_1.CreateRestaurantDto]),
-    __metadata("design:returntype", void 0)
-], RestaurantController.prototype, "createMyRestaurant", null);
+    __metadata("design:paramtypes", [Object, Number, create_restaurant_list_items_dto_1.CreateRestaurantListItemsDto]),
+    __metadata("design:returntype", Promise)
+], RestaurantController.prototype, "addRestaurantToList", null);
 __decorate([
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, common_1.Delete)('/delete/:id'),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Param)('id', common_1.ParseIntPipe)),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Number]),
-    __metadata("design:returntype", void 0)
-], RestaurantController.prototype, "removeMyRestaurant", null);
-__decorate([
-    (0, common_1.Get)('/lists/all'),
+    (0, common_1.Get)('/list'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], RestaurantController.prototype, "findAllMyLists", null);
-__decorate([
-    (0, common_1.Get)('/lists/my-list'),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    __param(0, (0, common_1.Req)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
-], RestaurantController.prototype, "findMyList", null);
 __decorate([
     (0, common_1.Post)('/list'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
@@ -137,18 +105,26 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], RestaurantController.prototype, "createList", null);
 __decorate([
-    (0, common_1.Post)('/list/:listId/items'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Param)('listId')),
-    __param(2, (0, common_1.Body)()),
+    (0, common_1.Get)('/:restaurantId'),
+    __param(0, (0, common_1.Param)('restaurantId', common_1.ParseIntPipe)),
+    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Number, create_restaurant_list_items_dto_1.CreateRestaurantListItemsDto]),
-    __metadata("design:returntype", Promise)
-], RestaurantController.prototype, "addRestaurantToList", null);
+    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:returntype", void 0)
+], RestaurantController.prototype, "findDetailByIdAndUserId", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, common_1.Get)('/lists/my-list'),
+    (0, common_1.Delete)('/:restaurantId'),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Param)('restaurantId', common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Number]),
+    __metadata("design:returntype", void 0)
+], RestaurantController.prototype, "removeMyRestaurant", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Get)(),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Query)('title')),
     __param(2, (0, common_1.Query)('page')),
@@ -156,18 +132,16 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, String, String, String]),
     __metadata("design:returntype", void 0)
-], RestaurantController.prototype, "findMyRestaurantList", null);
+], RestaurantController.prototype, "findMyRestaurantListItems", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, common_1.Get)('/lists/my-list'),
+    (0, common_1.Post)(),
     __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Query)('title')),
-    __param(2, (0, common_1.Query)('page')),
-    __param(3, (0, common_1.Query)('sort')),
+    __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String, String, String]),
+    __metadata("design:paramtypes", [Object, create_restaurant_dto_1.CreateRestaurantDto]),
     __metadata("design:returntype", void 0)
-], RestaurantController.prototype, "findMyRestaurantListItem", null);
+], RestaurantController.prototype, "createMyRestaurant", null);
 exports.RestaurantController = RestaurantController = __decorate([
     (0, common_1.Controller)('restaurants'),
     __metadata("design:paramtypes", [restaurant_service_1.RestaurantService,

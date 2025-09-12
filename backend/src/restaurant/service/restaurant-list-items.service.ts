@@ -12,14 +12,22 @@ export class RestaurantListItemsService {
         private readonly restaurantRepo: RestaurantRepository,
     ) {}
 
-    async createListItem(dto: CreateRestaurantListItemsDto, userId: number) {
+    async createListItem(
+        dto: CreateRestaurantListItemsDto,
+        userId: number,
+        listId: number,
+    ) {
+        console.log('userid :', userId);
+        console.log('dto :', dto);
+        console.log('listId :', listId);
         const list = await this.restaurantListsRepo.findOne({
-            where: { userId, id: dto.listId },
+            where: { userId: Number(userId), id: Number(listId) },
             select: ['id'],
         });
         if (!list) {
             throw new NotFoundException('리스트가 존재하지 않습니다.');
         }
+
         const restaurant = await this.restaurantRepo.findOne({
             where: { userId, id: dto.restaurantId },
             select: ['id'],
@@ -28,12 +36,12 @@ export class RestaurantListItemsService {
             throw new NotFoundException('맛집이 존재하지 않습니다.');
         }
 
-        const newListRows = this.restaurantListItemsRepo.create({
+        const newListItem = this.restaurantListItemsRepo.create({
             listId: list.id,
             restaurantId: restaurant.id,
         });
-        const savedListRows =
-            await this.restaurantListItemsRepo.save(newListRows);
-        return savedListRows;
+        const savedListItem =
+            await this.restaurantListItemsRepo.save(newListItem);
+        return savedListItem;
     }
 }

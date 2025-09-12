@@ -11,33 +11,26 @@ export declare class RestaurantController {
     constructor(restaurantService: RestaurantService, restaurantListsService: RestaurantListsService, restaurantListItemsService: RestaurantListItemsService);
     searchAllRestaurants(title: string, page?: string): Promise<any>;
     findSavedByUserId(req: any): Promise<import("./entity/restaurant.entity").RestaurantEntity[]>;
-    findDetailByIdAndUserId(id: number, req: any): Promise<import("./entity/restaurant.entity").RestaurantEntity>;
-    createMyRestaurant(req: any, createRestaurantDto: CreateRestaurantDto): Promise<import("./entity/restaurant.entity").RestaurantEntity>;
-    removeMyRestaurant(req: any, id: number): Promise<{
-        message: string;
-    }>;
+    addRestaurantToList(req: any, listId: number, dto: CreateRestaurantListItemsDto): Promise<import("./entity/restaurant-list-items").RestaurantListItemsEntity>;
     findAllMyLists(req: any): Promise<{
         data: import("./entity/restaurant-lists.entity").RestaurantListsEntity[];
         message: string;
         statusCode: number;
     }>;
-    findMyList(req: any): Promise<import("./entity/restaurant-lists.entity").RestaurantListsEntity[]>;
     createList(req: any, dto: CreateRestaurantListsDto): Promise<{
         data: import("./entity/restaurant-lists.entity").RestaurantListsEntity;
         message: string;
         statusCode: number;
     }>;
-    addRestaurantToList(req: any, listId: number, dto: CreateRestaurantListItemsDto): Promise<import("./entity/restaurant-list-items").RestaurantListItemsEntity>;
-    findMyRestaurantList(req: any, title?: string, page?: string, sort?: string): Promise<{
+    findDetailByIdAndUserId(id: number, req: any): Promise<import("./entity/restaurant.entity").RestaurantEntity>;
+    removeMyRestaurant(req: any, id: number): Promise<{
+        message: string;
+    }>;
+    findMyRestaurantListItems(req: any, title?: string, page?: string, sort?: string): Promise<{
         total: number;
         page: number;
         pageSize: number;
         data: import("./entity/restaurant.entity").RestaurantEntity[];
     }>;
-    findMyRestaurantListItem(req: any, title?: string, page?: string, sort?: string): Promise<{
-        total: number;
-        page: number;
-        pageSize: number;
-        data: import("./entity/restaurant.entity").RestaurantEntity[];
-    }>;
+    createMyRestaurant(req: any, createRestaurantDto: CreateRestaurantDto): Promise<import("./entity/restaurant.entity").RestaurantEntity>;
 }

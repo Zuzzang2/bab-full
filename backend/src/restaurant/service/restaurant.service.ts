@@ -68,54 +68,7 @@ export class RestaurantService {
         }
     }
 
-    async findMyRestaurantList(
-        userId?: string,
-        title?: string,
-        page: number = 1,
-        sort: string = 'latest',
-    ) {
-        const take = 5;
-        const skip = (page - 1) * take;
-
-        const where: any = {};
-        if (title) {
-            where.title = ILike(`%${title}%`);
-        }
-        if (userId) {
-            where.userId = Number(userId);
-        }
-
-        // 정렬 조건 설정
-        let order: any;
-        switch (sort) {
-            case 'oldest':
-                order = { createdAt: 'ASC' };
-                break;
-            case 'title':
-                order = { title: 'ASC' };
-                break;
-            default: // 'latest'
-                order = { createdAt: 'DESC' };
-                break;
-        }
-
-        const [restaurants, total] =
-            await this.restaurantRepository.findAndCount({
-                where,
-                take,
-                skip,
-                order,
-            });
-
-        return {
-            total,
-            page,
-            pageSize: take,
-            data: restaurants,
-        };
-    }
-
-    async findMyRestaurantListItem(
+    async findMyRestaurantListItems(
         userId: string,
         title?: string,
         page: number = 1,
