@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signupUser } from '@/api/auth';
+import { signupUser, loginUser, fetchUser } from '@/api/auth';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function Signup() {
     const navigate = useNavigate();
+    const { setUser } = useAuth();
 
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -19,11 +21,21 @@ export default function Signup() {
         }
 
         try {
+            // 회원가입 후 로그인
             const data = await signupUser(email, password);
+            await loginUser(email, password);
+
+            // 로그인 후 사용자 정보를 백엔드에서 가져와서 Context에 업데이트
+            const userData = await fetchUser();
+            setUser(userData);
+
             alert(data.message);
             navigate('/');
         } catch (err) {
-            setError('회원가입에 실패했습니다.');
+            // 구체적인 에러 메시지 표시
+            const errorMessage =
+                err instanceof Error ? err.message : '회원가입에 실패했습니다.';
+            setError(errorMessage);
         }
     };
 

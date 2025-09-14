@@ -1,32 +1,14 @@
-import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchUser, logoutUser } from '@/api/auth';
-import { User } from '@/types/user';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function NavBar() {
-    const [user, setUser] = useState<User | null>(null);
+    // 로컬 상태 대신 Context에서 상태 가져오도록 수정
+    const { user, logout } = useAuth(); // Context에서 상태 가져옴
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const checkAuth = async () => {
-            try {
-                const userData = await fetchUser();
-                setUser(userData);
-            } catch (err) {
-                console.error('유저 정보를 불러오지 못했습니다:', err);
-            }
-        };
-        checkAuth();
-    }, []);
-
     const handleLogout = async () => {
-        try {
-            await logoutUser();
-            setUser(null);
-            navigate('/');
-        } catch (err) {
-            console.error('로그아웃 실패:', err);
-        }
+        await logout(); // Context의 logout 함수 사용
+        navigate('/');
     };
 
     return (

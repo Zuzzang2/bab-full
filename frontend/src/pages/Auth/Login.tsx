@@ -1,18 +1,24 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { loginUser } from '@/api/auth';
+import { fetchUser, loginUser } from '@/api/auth';
+import { useAuth } from '@/contexts/AuthContext';
 
 function Login() {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [error, setError] = useState<string>('');
     const navigate = useNavigate();
+    const { setUser } = useAuth(); // Context에서 상태 가져옴
 
     const handleLogin: React.FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
 
         try {
             const data = await loginUser(email, password);
+
+            // 로그인 후 사용자 정보를 백엔드에서 가져와서 Context에 업데이트
+            const userData = await fetchUser();
+            setUser(userData);
             alert(data.message);
             navigate('/');
         } catch (err) {
