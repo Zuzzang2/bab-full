@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchRestaurantDetailById } from '@/api/restaurant';
+import { fetchMyRestaurantDetailById } from '@/api/restaurant';
 import KakaoMap from '@/components/KakaoMap';
 import { Restaurant } from '@/types/restaurant';
 
@@ -12,7 +12,7 @@ function RestaurantDetail() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await fetchRestaurantDetailById(Number(id));
+                const data = await fetchMyRestaurantDetailById(Number(id));
                 setRestaurant(data);
             } catch (err) {
                 setError('맛집 정보를 불러오지 못했습니다.');

@@ -1,18 +1,20 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchRestaurants, deleteRestaurantById } from '@/api/restaurant';
+import { fetchMyRestaurants, deleteMyRestaurantById } from '@/api/restaurant';
 import { Restaurant, RestaurantListResponse } from '@/types/restaurant';
 
 type SortType = 'latest' | 'oldest' | 'title';
 
-function MyList() {
+function MyRestaurants() {
     const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
     const [page, setPage] = useState<number>(1);
     const [error, setError] = useState<string>('');
     const [hasMore, setHasMore] = useState<boolean>(true);
+    const [totalPages, setTotalPages] = useState<number>(1);
     const [sort, setSort] = useState<SortType>('latest');
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [inputValue, setInputValue] = useState<string>('');
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -31,7 +33,7 @@ function MyList() {
         if (!confirmDelete) return;
 
         try {
-            const data = await deleteRestaurantById(id);
+            const data = await deleteMyRestaurantById(id);
             alert(data.message);
             setRestaurants((prev) => prev.filter((r) => r.id !== id));
         } catch (err) {
@@ -54,7 +56,7 @@ function MyList() {
         title: string,
     ) => {
         try {
-            const res: RestaurantListResponse = await fetchRestaurants({
+            const res: RestaurantListResponse = await fetchMyRestaurants({
                 page: pageNumber,
                 sort: sortParam,
                 title: title,
@@ -76,7 +78,7 @@ function MyList() {
     };
     return (
         <div className="max-w-lg mx-auto mt-10">
-            <h2 className="text-xl font-bold mb-4">내 맛집 리스트</h2>
+            <h2 className="text-xl font-bold mb-4">내가 저장한 전체 맛집</h2>
 
             <div className="mb-4 flex items-center gap-4">
                 {/* 검색 */}
@@ -129,7 +131,9 @@ function MyList() {
                         >
                             <div
                                 className="flex-1 cursor-pointer"
-                                onClick={() => navigate(`/mylist/${r.id}`)}
+                                onClick={() =>
+                                    navigate(`/my-restaurants/${r.id}`)
+                                }
                             >
                                 <p className="font-semibold">{r.title}</p>
                                 <p className="text-sm text-gray-500">
@@ -159,4 +163,4 @@ function MyList() {
     );
 }
 
-export default MyList;
+export default MyRestaurants;

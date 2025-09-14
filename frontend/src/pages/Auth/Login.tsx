@@ -13,8 +13,9 @@ function Login() {
 
         try {
             const data = await loginUser(email, password);
-            alert(data.message);
-            navigate('/');
+            // alert(data.message);
+            // navigate('/');
+            window.location.href = '/';
         } catch (err) {
             setError('로그인 실패. 이메일 또는 비밀번호를 확인하세요.');
         }
