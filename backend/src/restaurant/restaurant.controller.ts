@@ -47,7 +47,7 @@ export class RestaurantController {
     @Get('/list/:listId')
     findMyRestaurantListItems(
         @Req() req,
-        @Query('listId') listId: string,
+        @Param('listId') listId: string,
         @Query('title') title?: string,
         @Query('page') page: string = '1',
         @Query('sort') sort: string = 'latest',
@@ -61,7 +61,7 @@ export class RestaurantController {
         );
     }
 
-    // 특정 리스트에 맛집 추가
+    // 특정 맛집 리스트에 맛집 추가
     @Post('/list/:listId')
     @UseGuards(JwtAuthGuard)
     async addRestaurantToList(
@@ -147,7 +147,7 @@ export class RestaurantController {
         );
     }
 
-    // 전체 맛집 목록에 지정한 맛집 저장
+    // 전체 맛집 목록에 맛집 추가
     @UseGuards(JwtAuthGuard)
     @Post()
     createMyRestaurant(
