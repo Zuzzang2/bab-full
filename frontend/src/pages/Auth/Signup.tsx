@@ -68,7 +68,13 @@ export default function Signup() {
                     className="w-full border px-3 py-2 rounded"
                 />
 
-                {error && <p className="text-red-500 text-sm">{error}</p>}
+                {error && (
+                    <div className="text-red-500 text-sm">
+                        {error.split('\n').map((line, index) => (
+                            <div key={index}>{line}</div>
+                        ))}
+                    </div>
+                )}
 
                 <button
                     type="submit"

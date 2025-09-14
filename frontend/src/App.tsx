@@ -8,27 +8,29 @@ import Layout from './components/Layout';
 import Detail from './pages/Restaurants/Detail';
 import MyRestaurants from './pages/Restaurants/MyRestaurants';
 import CreateList from './pages/Restaurants/CreateList';
-import CreateList from './pages/MyLists/CreateList';
 import { AuthProvider } from './contexts/AuthContext';
 
 function App() {
     return (
         <AuthProvider>
-          <BrowserRouter>
-              <Layout>
-                  <Routes>
-                      <Route path="/" element={<Home />} />
-                      <Route path="/signup" element={<Signup />} />
-                      <Route path="/login" element={<Login />} />
-                      <Route path="/my-restaurants" element={<MyRestaurants />} />
-                      <Route path="/search" element={<Search />} />
-                      <Route path="/results" element={<SearchResults />} />
-                      <Route path="/mylist/:id" element={<Detail />} />
-                      <Route path="/create-list" element={<CreateList />} />
-                  </Routes>
-              </Layout>
-          </BrowserRouter>
-         </AuthProvider>
+            <BrowserRouter>
+                <Layout>
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/signup" element={<Signup />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route
+                            path="/my-restaurants"
+                            element={<MyRestaurants />}
+                        />
+                        <Route path="/search" element={<Search />} />
+                        <Route path="/results" element={<SearchResults />} />
+                        <Route path="/mylist/:id" element={<Detail />} />
+                        <Route path="/create-list" element={<CreateList />} />
+                    </Routes>
+                </Layout>
+            </BrowserRouter>
+        </AuthProvider>
     );
 }
 
