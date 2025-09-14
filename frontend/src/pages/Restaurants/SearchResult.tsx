@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
-    addRestaurant,
-    fetchMyRestaurants,
-    searchRestaurants,
+    createMyRestaurant,
+    fetchRestaurantsSavedByUserId,
+    searchAllRestaurants,
 } from '@/api/restaurant';
 import { CreateRestaurantDto, Restaurant } from '@/types/restaurant';
 
@@ -14,17 +14,23 @@ function SearchResults() {
     const [error, setError] = useState<string>('');
     const [savedroadAddress, setSavedroadAddress] = useState<string[]>([]);
 
-    // 저장된 맛집 roadAdress 먼저 불러오기
     useEffect(() => {
         const fetchSaved = async () => {
             try {
-                const data = await fetchMyRestaurants();
-                const roadAddress = data.map((r) => r.roadAddress);
+                const data = await fetchRestaurantsSavedByUserId();
+
+                const roadAddress = data
+                    .map((r) => r.roadAddress?.trim())
+                    .filter(Boolean); // null/undefined 제거
+
+                console.log('roadAddress:', roadAddress);
                 setSavedroadAddress(roadAddress);
             } catch (err) {
-                setError('맛집 조회 실패:');
+                console.error(err);
+                setError('맛집 조회 실패');
             }
         };
+
         fetchSaved();
     }, []);
 
@@ -34,7 +40,8 @@ function SearchResults() {
 
         const fetchResults = async () => {
             try {
-                const data = await searchRestaurants(query);
+                const data = await searchAllRestaurants(query);
+                console.log('검색 결과:', data.items);
                 setResults(data.items);
             } catch (err) {
                 console.error(err);
@@ -62,7 +69,7 @@ function SearchResults() {
 
             console.log('저장할 데이터:', payload);
 
-            await addRestaurant(payload);
+            await createMyRestaurant(payload);
 
             alert(`"${cleanTitle}"이(가) 저장되었습니다.`);
             setSavedroadAddress((prev) => [...prev, item.roadAddress]); // 버튼 전환

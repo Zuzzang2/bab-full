@@ -1,5 +1,5 @@
 import api from '@/api/axiosInstance';
-import { User, SignResponse } from '@/types/user';
+import { User } from '@/types/user';
 
 export const fetchUser = async (): Promise<User> => {
     const res = await api.get('/user/me', {});
@@ -9,7 +9,7 @@ export const fetchUser = async (): Promise<User> => {
 export const signupUser = async (
     email: string,
     password: string,
-): Promise<SignResponse> => {
+): Promise<{ message: string }> => {
     const res = await api.post('/auth/signup', { email, password });
     return res.data;
 };
@@ -17,7 +17,7 @@ export const signupUser = async (
 export const loginUser = async (
     email: string,
     password: string,
-): Promise<SignResponse> => {
+): Promise<{ message: string }> => {
     const res = await api.post('/auth/signin', { email, password });
     return res.data;
 };

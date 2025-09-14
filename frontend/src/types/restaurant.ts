@@ -37,3 +37,21 @@ export type SearchRestaurantResponse = {
     display: number;
     items: Restaurant[];
 };
+
+export type FetchMyRestaurantsParams = {
+    page: number;
+    sort?: string;
+    title?: string;
+};
+
+export type FetchMyListRestaurantsParams = {
+    listId: number;
+    page?: number;
+    sort?: string;
+    title?: string;
+};
+
+export type CreateRestaurantListDto = {
+    title: string;
+    description?: string;
+};
