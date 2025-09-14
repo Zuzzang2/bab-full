@@ -4,6 +4,7 @@ import {
     NotFoundException,
 } from '@nestjs/common';
 import { RestaurantRepository } from '../repository/restaurant.repository';
+import { RestaurantListsRepository } from '../repository/restaurant-lists.repository';
 import { CreateRestaurantDto } from '../dto/create-restaurant.dto';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
@@ -13,6 +14,7 @@ import { ILike } from 'typeorm';
 export class RestaurantService {
     constructor(
         private readonly restaurantRepository: RestaurantRepository,
+        private readonly restaurantListsRepository: RestaurantListsRepository,
         private config: ConfigService,
     ) {}
 
@@ -70,12 +72,20 @@ export class RestaurantService {
 
     async findMyRestaurantListItems(
         userId: string,
+        listId: number,
         title?: string,
         page: number = 1,
         sort: string = 'latest',
     ) {
         const take = 5;
         const skip = (page - 1) * take;
+
+        const list = await this.restaurantListsRepository.findOne({
+            where: { id: listId, userId: Number(userId) },
+        });
+        if (!list) {
+            throw new NotFoundException('리스트가 존재하지 않습니다.');
+        }
 
         // 정렬 조건
         let orderByColumn: string;
@@ -99,19 +109,27 @@ export class RestaurantService {
         const qb = this.restaurantRepository
             .createQueryBuilder('restaurant')
             .leftJoin('restaurant.items', 'listItem')
-            .innerJoin('listItem.list', 'list', 'list.userId = :userId', {
-                userId: Number(userId),
-            });
+            .innerJoin(
+                'listItem.list',
+                'list',
+                'list.id = :listId AND list.userId = :userId',
+                {
+                    listId: Number(listId),
+                    userId: Number(userId),
+                },
+            );
 
         if (title) {
             qb.andWhere('restaurant.title ILIKE :title', {
                 title: `%${title}%`,
             });
+            console.log(title);
         }
 
         qb.orderBy(orderByColumn, orderDirection).take(take).skip(skip);
 
         const [restaurants, total] = await qb.getManyAndCount();
+        console.log(restaurants);
 
         return {
             total, // 전체 맛집 개수
@@ -119,7 +137,6 @@ export class RestaurantService {
             pageSize: take,
             data: restaurants, // 5개 단위 맛집 데이터
         };
-        console.log(restaurants);
     }
 
     async findSavedByUserId(userId: number) {

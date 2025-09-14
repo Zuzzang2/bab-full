@@ -101,12 +101,14 @@ export class RestaurantController {
     @Get()
     findMyRestaurantListItems(
         @Req() req,
+        @Query('listId') listId: string,
         @Query('title') title?: string,
         @Query('page') page: string = '1',
         @Query('sort') sort: string = 'latest',
     ) {
         return this.restaurantService.findMyRestaurantListItems(
             req.user.userId,
+            Number(listId),
             title,
             Number(page),
             sort,

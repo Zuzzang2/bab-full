@@ -25,7 +25,9 @@ export class RestaurantListItemsEntity {
     @Column()
     listId: number;
 
-    @ManyToOne(() => RestaurantEntity, { onDelete: 'CASCADE' })
+    @ManyToOne(() => RestaurantEntity, (restaurant) => restaurant.items, {
+        onDelete: 'CASCADE',
+    })
     @JoinColumn({ name: 'restaurantId' })
     restaurant: RestaurantEntity;
 

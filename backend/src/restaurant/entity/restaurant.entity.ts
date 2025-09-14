@@ -51,7 +51,7 @@ export class RestaurantEntity {
     @Column()
     userId: number;
 
-    @OneToMany(() => RestaurantListItemsEntity, (item) => item.list)
+    @OneToMany(() => RestaurantListItemsEntity, (item) => item.restaurant)
     items: RestaurantListItemsEntity[];
 
     @CreateDateColumn()

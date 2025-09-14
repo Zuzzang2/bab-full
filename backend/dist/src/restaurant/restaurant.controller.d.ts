@@ -26,7 +26,7 @@ export declare class RestaurantController {
     removeMyRestaurant(req: any, id: number): Promise<{
         message: string;
     }>;
-    findMyRestaurantListItems(req: any, title?: string, page?: string, sort?: string): Promise<{
+    findMyRestaurantListItems(req: any, listId: string, title?: string, page?: string, sort?: string): Promise<{
         total: number;
         page: number;
         pageSize: number;
