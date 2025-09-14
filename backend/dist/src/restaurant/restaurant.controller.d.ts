@@ -11,6 +11,12 @@ export declare class RestaurantController {
     constructor(restaurantService: RestaurantService, restaurantListsService: RestaurantListsService, restaurantListItemsService: RestaurantListItemsService);
     searchAllRestaurants(title: string, page?: string): Promise<any>;
     findSavedByUserId(req: any): Promise<import("./entity/restaurant.entity").RestaurantEntity[]>;
+    findMyRestaurantListItems(req: any, listId: string, title?: string, page?: string, sort?: string): Promise<{
+        total: number;
+        page: number;
+        pageSize: number;
+        data: import("./entity/restaurant.entity").RestaurantEntity[];
+    }>;
     addRestaurantToList(req: any, listId: number, dto: CreateRestaurantListItemsDto): Promise<import("./entity/restaurant-list-items").RestaurantListItemsEntity>;
     findAllMyLists(req: any): Promise<{
         data: import("./entity/restaurant-lists.entity").RestaurantListsEntity[];
@@ -26,7 +32,10 @@ export declare class RestaurantController {
     removeMyRestaurant(req: any, id: number): Promise<{
         message: string;
     }>;
-    findMyRestaurantListItems(req: any, listId: string, title?: string, page?: string, sort?: string): Promise<{
+    removeRestaurantFromList(req: any, listId: number, restaurantId: number): Promise<{
+        message: string;
+    }>;
+    findMyRestaurants(req: any, title?: string, page?: string, sort?: string): Promise<{
         total: number;
         page: number;
         pageSize: number;

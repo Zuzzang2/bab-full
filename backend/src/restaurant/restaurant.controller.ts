@@ -42,7 +42,26 @@ export class RestaurantController {
         return this.restaurantService.findSavedByUserId(req.user.userId);
     }
 
-    // 나의 리스트에 맛집 추가
+    // 해당 리스트의 맛집 목록
+    @UseGuards(JwtAuthGuard)
+    @Get('/list/:listId')
+    findMyRestaurantListItems(
+        @Req() req,
+        @Query('listId') listId: string,
+        @Query('title') title?: string,
+        @Query('page') page: string = '1',
+        @Query('sort') sort: string = 'latest',
+    ) {
+        return this.restaurantService.findMyRestaurantListItems(
+            req.user.userId,
+            Number(listId),
+            title,
+            Number(page),
+            sort,
+        );
+    }
+
+    // 특정 리스트에 맛집 추가
     @Post('/list/:listId')
     @UseGuards(JwtAuthGuard)
     async addRestaurantToList(
@@ -87,14 +106,14 @@ export class RestaurantController {
     }
 
     // 저장된 맛집 삭제
-    // @UseGuards(JwtAuthGuard)
-    // @Delete('/:restaurantId')
-    // removeMyRestaurant(
-    //     @Req() req,
-    //     @Param('restaurantId', ParseIntPipe) id: number,
-    // ) {
-    //     return this.restaurantService.removeMyRestaurant(req.user.userId, id);
-    // }
+    @UseGuards(JwtAuthGuard)
+    @Delete('/:restaurantId')
+    removeMyRestaurant(
+        @Req() req,
+        @Param('restaurantId', ParseIntPipe) id: number,
+    ) {
+        return this.restaurantService.removeMyRestaurant(req.user.userId, id);
+    }
 
     // 해당 리스트에서 맛집 삭제
     @UseGuards(JwtAuthGuard)
@@ -111,26 +130,24 @@ export class RestaurantController {
         );
     }
 
-    // 해당 리스트의 맛집 목록
+    // 내가 저장한 전체 맛집 목록
     @UseGuards(JwtAuthGuard)
     @Get()
-    findMyRestaurantListItems(
+    findMyRestaurants(
         @Req() req,
-        @Query('listId') listId: string,
         @Query('title') title?: string,
         @Query('page') page: string = '1',
         @Query('sort') sort: string = 'latest',
     ) {
-        return this.restaurantService.findMyRestaurantListItems(
+        return this.restaurantService.findMyRestaurants(
             req.user.userId,
-            Number(listId),
             title,
             Number(page),
             sort,
         );
     }
 
-    // 리스트에 맛집 등록
+    // 전체 맛집 목록에 지정한 맛집 저장
     @UseGuards(JwtAuthGuard)
     @Post()
     createMyRestaurant(

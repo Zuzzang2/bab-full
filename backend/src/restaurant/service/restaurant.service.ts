@@ -1,6 +1,5 @@
 import {
     ConflictException,
-    ForbiddenException,
     Injectable,
     NotFoundException,
 } from '@nestjs/common';
@@ -73,6 +72,53 @@ export class RestaurantService {
         }
     }
 
+    async findMyRestaurants(
+        userId: number,
+        title?: string,
+        page: number = 1,
+        sort: string = 'latest',
+    ) {
+        const take = 5;
+        const skip = (page - 1) * take;
+
+        let orderByColumn: string;
+        let orderDirection: 'ASC' | 'DESC';
+        switch (sort) {
+            case 'oldest':
+                orderByColumn = 'restaurant.createdAt';
+                orderDirection = 'ASC';
+                break;
+            case 'title':
+                orderByColumn = 'restaurant.title';
+                orderDirection = 'ASC';
+                break;
+            default:
+                orderByColumn = 'restaurant.createdAt';
+                orderDirection = 'DESC';
+                break;
+        }
+
+        const qb = this.restaurantRepository
+            .createQueryBuilder('restaurant')
+            .where('restaurant.userId = :userId', { userId });
+
+        if (title) {
+            qb.andWhere('restaurant.title ILIKE :title', {
+                title: `%${title}%`,
+            });
+        }
+
+        qb.orderBy(orderByColumn, orderDirection).take(take).skip(skip);
+
+        const [restaurants, total] = await qb.getManyAndCount();
+        return {
+            total,
+            page,
+            pageSize: take,
+            data: restaurants,
+        };
+    }
+
     async findMyRestaurantListItems(
         userId: string,
         listId: number,
@@ -126,7 +172,6 @@ export class RestaurantService {
             qb.andWhere('restaurant.title ILIKE :title', {
                 title: `%${title}%`,
             });
-            console.log(title);
         }
 
         qb.orderBy(orderByColumn, orderDirection).take(take).skip(skip);
@@ -157,6 +202,22 @@ export class RestaurantService {
         }
 
         return restaurant;
+    }
+
+    async removeMyRestaurant(userId: number, restaurantId: number) {
+        const restaurant = await this.restaurantRepository.findOne({
+            where: {
+                id: restaurantId,
+                user: { id: userId },
+            },
+        });
+
+        if (!restaurant) {
+            throw new NotFoundException('맛집을 찾을 수 없습니다.');
+        }
+
+        await this.restaurantRepository.remove(restaurant);
+        return { message: '맛집이 삭제되었습니다.' };
     }
 
     async removeRestaurantFromList(
