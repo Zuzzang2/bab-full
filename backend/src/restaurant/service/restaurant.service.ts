@@ -78,34 +78,38 @@ export class RestaurantService {
         const skip = (page - 1) * take;
 
         // 정렬 조건
-        let order: any;
+        let orderByColumn: string;
+        let orderDirection: 'ASC' | 'DESC';
         switch (sort) {
             case 'oldest':
-                order = { createdAt: 'ASC' };
+                orderByColumn = 'restaurant.createdAt';
+                orderDirection = 'ASC';
                 break;
             case 'title':
-                order = { name: 'ASC' }; // 레스토랑 이름 기준 정렬
+                orderByColumn = 'restaurant.title';
+                orderDirection = 'ASC';
                 break;
             default:
-                order = { createdAt: 'DESC' };
+                orderByColumn = 'restaurant.createdAt';
+                orderDirection = 'DESC';
                 break;
         }
 
         // 쿼리빌더로 조인 (ListItem 통해 userId 필터링)
         const qb = this.restaurantRepository
             .createQueryBuilder('restaurant')
-            .innerJoin('restaurant.items', 'listItem')
+            .leftJoin('restaurant.items', 'listItem')
             .innerJoin('listItem.list', 'list', 'list.userId = :userId', {
                 userId: Number(userId),
             });
 
         if (title) {
-            qb.andWhere('restaurant.name ILIKE :title', {
+            qb.andWhere('restaurant.title ILIKE :title', {
                 title: `%${title}%`,
             });
         }
 
-        qb.orderBy(order).take(take).skip(skip);
+        qb.orderBy(orderByColumn, orderDirection).take(take).skip(skip);
 
         const [restaurants, total] = await qb.getManyAndCount();
 
@@ -115,6 +119,7 @@ export class RestaurantService {
             pageSize: take,
             data: restaurants, // 5개 단위 맛집 데이터
         };
+        console.log(restaurants);
     }
 
     async findSavedByUserId(userId: number) {

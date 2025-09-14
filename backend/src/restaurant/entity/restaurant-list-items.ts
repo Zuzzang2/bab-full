@@ -20,7 +20,7 @@ export class RestaurantListItemsEntity {
         onDelete: 'CASCADE',
     })
     @JoinColumn({ name: 'listId' })
-    list: RestaurantEntity;
+    list: RestaurantListsEntity;
 
     @Column()
     listId: number;

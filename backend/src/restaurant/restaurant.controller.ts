@@ -96,6 +96,7 @@ export class RestaurantController {
         return this.restaurantService.removeMyRestaurant(req.user.userId, id);
     }
 
+    // 해당 리스트의 맛집 목록
     @UseGuards(JwtAuthGuard)
     @Get()
     findMyRestaurantListItems(
@@ -112,6 +113,7 @@ export class RestaurantController {
         );
     }
 
+    // 리스트에 맛집 등록
     @UseGuards(JwtAuthGuard)
     @Post()
     createMyRestaurant(
