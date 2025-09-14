@@ -87,7 +87,7 @@ __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Get)('/list/:listId'),
     __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Query)('listId')),
+    __param(1, (0, common_1.Param)('listId')),
     __param(2, (0, common_1.Query)('title')),
     __param(3, (0, common_1.Query)('page')),
     __param(4, (0, common_1.Query)('sort')),

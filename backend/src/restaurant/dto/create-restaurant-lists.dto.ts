@@ -8,7 +8,4 @@ export class CreateRestaurantListsDto {
     @IsOptional()
     @IsString()
     description?: string;
-
-    // @Column({ default: false })
-    // isDefault: boolean;
 }
