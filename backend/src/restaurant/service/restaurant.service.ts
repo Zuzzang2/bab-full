@@ -1,5 +1,6 @@
 import {
     ConflictException,
+    ForbiddenException,
     Injectable,
     NotFoundException,
 } from '@nestjs/common';
@@ -9,12 +10,14 @@ import { CreateRestaurantDto } from '../dto/create-restaurant.dto';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 import { ILike } from 'typeorm';
+import { RestaurantListItemsRepository } from '../repository/restaurant-list-items.repository';
 
 @Injectable()
 export class RestaurantService {
     constructor(
         private readonly restaurantRepository: RestaurantRepository,
         private readonly restaurantListsRepository: RestaurantListsRepository,
+        private readonly restaurantListItemsRepository: RestaurantListItemsRepository,
         private config: ConfigService,
     ) {}
 
@@ -129,7 +132,6 @@ export class RestaurantService {
         qb.orderBy(orderByColumn, orderDirection).take(take).skip(skip);
 
         const [restaurants, total] = await qb.getManyAndCount();
-        console.log(restaurants);
 
         return {
             total, // 전체 맛집 개수
@@ -157,21 +159,34 @@ export class RestaurantService {
         return restaurant;
     }
 
-    async removeMyRestaurant(userId: number, restaurantId: number) {
-        const restaurant = await this.restaurantRepository.findOne({
+    async removeRestaurantFromList(
+        userId: number,
+        listId: number,
+        restaurantId: number,
+    ) {
+        const list = await this.restaurantListsRepository.findOne({
+            where: { id: listId, userId },
+        });
+
+        if (!list) {
+            throw new NotFoundException('리스트가 존재하지 않습니다.');
+        }
+
+        const item = await this.restaurantListItemsRepository.findOne({
             where: {
-                id: restaurantId,
-                user: { id: userId },
+                listId,
+                restaurantId,
             },
         });
 
-        if (!restaurant) {
+        if (!item) {
             throw new NotFoundException(
-                '맛집을 찾을 수 없거나 권한이 없습니다.',
+                '해당 리스트에 이 맛집이 존재하지 않습니다.',
             );
         }
 
-        await this.restaurantRepository.remove(restaurant);
-        return { message: '맛집이 삭제되었습니다.' };
+        await this.restaurantListItemsRepository.remove(item);
+
+        return { message: '리스트에서 맛집이 삭제되었습니다.' };
     }
 }

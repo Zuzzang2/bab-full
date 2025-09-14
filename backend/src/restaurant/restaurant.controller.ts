@@ -87,13 +87,28 @@ export class RestaurantController {
     }
 
     // 저장된 맛집 삭제
+    // @UseGuards(JwtAuthGuard)
+    // @Delete('/:restaurantId')
+    // removeMyRestaurant(
+    //     @Req() req,
+    //     @Param('restaurantId', ParseIntPipe) id: number,
+    // ) {
+    //     return this.restaurantService.removeMyRestaurant(req.user.userId, id);
+    // }
+
+    // 해당 리스트에서 맛집 삭제
     @UseGuards(JwtAuthGuard)
-    @Delete('/:restaurantId')
-    removeMyRestaurant(
+    @Delete('/:restaurantId/list/:listId')
+    removeRestaurantFromList(
         @Req() req,
-        @Param('restaurantId', ParseIntPipe) id: number,
+        @Param('listId', ParseIntPipe) listId: number,
+        @Param('restaurantId', ParseIntPipe) restaurantId: number,
     ) {
-        return this.restaurantService.removeMyRestaurant(req.user.userId, id);
+        return this.restaurantService.removeRestaurantFromList(
+            req.user.userId,
+            listId,
+            restaurantId,
+        );
     }
 
     // 해당 리스트의 맛집 목록
