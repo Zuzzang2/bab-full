@@ -18,14 +18,11 @@ function MyRestaurants() {
     const [page, setPage] = useState<number>(1);
     const [error, setError] = useState<string>('');
     const [hasMore, setHasMore] = useState<boolean>(true);
-    const [totalPages, setTotalPages] = useState<number>(1);
     const [sort, setSort] = useState<SortType>('latest');
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [inputValue, setInputValue] = useState<string>('');
     const [myLists, setMyLists] = useState<RestaurantList[]>([]);
     const [selectedListId, setSelectedListId] = useState<number | null>(null);
-
-    const navigate = useNavigate();
 
     // 리스트 목록 가져오기 (최초 1회)
     useEffect(() => {
@@ -33,6 +30,7 @@ function MyRestaurants() {
             try {
                 const data = await fetchMyLists();
                 setMyLists(data);
+                console.log('리스트 목록:', data);
             } catch (err) {
                 console.error('리스트 가져오기 실패', err);
             }
@@ -52,6 +50,11 @@ function MyRestaurants() {
         if (!hasMore) return;
         loadRestaurants(page, sort, searchTerm);
     }, [page, sort, searchTerm]);
+
+    const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const id = Number(e.target.value);
+        setSelectedListId(id);
+    };
 
     const handleDelete = async (id: number) => {
         const confirmDelete = window.confirm('정말 삭제하시겠습니까?');
@@ -109,7 +112,14 @@ function MyRestaurants() {
             {myLists.length > 0 && (
                 <div className="mb-4">
                     <label className="mr-2 font-semibold">나의 리스트:</label>
-                    <select className="border rounded px-2 py-1">
+                    <select
+                        value={selectedListId ?? ''}
+                        onChange={handleChange}
+                        className="border rounded px-2 py-1"
+                    >
+                        <option value="" disabled>
+                            리스트를 선택하세요
+                        </option>
                         {myLists.map((list) => (
                             <option key={list.id} value={list.id}>
                                 {list.title} – {list.description}
@@ -119,6 +129,7 @@ function MyRestaurants() {
                 </div>
             )}
 
+            {/* 검색 및 정렬 */}
             <div className="mb-4 flex items-center gap-4">
                 {/* 검색 */}
                 <div className="flex items-center gap-2">
@@ -156,48 +167,45 @@ function MyRestaurants() {
                     </select>
                 </div>
             </div>
-            {error && <p className="text-red-500 mb-4">{error}</p>}
-            {restaurants.length === 0 && !hasMore ? (
-                <p className="text-gray-500 text-center mt-8">
-                    검색 결과가 없습니다.
-                </p>
-            ) : (
-                <ul className="space-y-2">
-                    {restaurants.map((r) => (
-                        <li
-                            key={r.id}
-                            className="p-2 border rounded flex justify-between items-center"
-                        >
-                            <div
-                                className="flex-1 cursor-pointer"
-                                onClick={() =>
-                                    navigate(`/my-restaurants/${r.id}`)
-                                }
-                            >
-                                <p className="font-semibold">{r.title}</p>
-                                <p className="text-sm text-gray-500">
-                                    {r.roadAddress}
+
+            {/* 맛집 목록 */}
+            <ul className="space-y-2">
+                {restaurants.map((restaurant) => (
+                    <li key={restaurant.id} className="border p-2 rounded">
+                        <div className="flex justify-between items-center">
+                            <div>
+                                <h3 className="font-semibold">
+                                    {restaurant.title}
+                                </h3>
+                                <p className="text-sm text-gray-600">
+                                    {restaurant.address}
                                 </p>
                             </div>
                             <button
-                                onClick={() => handleDelete(r.id)}
-                                className="text-red-500 text-sm hover:underline"
+                                onClick={() => handleDelete(restaurant.id)}
+                                className="text-red-500 hover:underline"
                             >
                                 삭제
                             </button>
-                        </li>
-                    ))}
-                </ul>
+                        </div>
+                    </li>
+                ))}
+            </ul>
+
+            {/* 더보기 버튼 */}
+            {hasMore && (
+                <div className="mt-4 text-center">
+                    <button
+                        onClick={handleLoadMore}
+                        className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                    >
+                        더 보기
+                    </button>
+                </div>
             )}
 
-            {hasMore && (
-                <button
-                    onClick={handleLoadMore}
-                    className="mt-4 w-full bg-gray-200 py-2 rounded"
-                >
-                    더보기
-                </button>
-            )}
+            {/* 에러 메시지 */}
+            {error && <p className="text-red-500 mt-4">{error}</p>}
         </div>
     );
 }

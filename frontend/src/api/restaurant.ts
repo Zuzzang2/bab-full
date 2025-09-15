@@ -45,7 +45,7 @@ export const fetchMyListRestaurants = async ({
 // 내 리스트 전체
 export const fetchMyLists = async (): Promise<RestaurantList[]> => {
     const res = await api.get('/restaurants/list');
-    return res.data;
+    return res.data.data;
 };
 
 // 모든 맛집 검색
