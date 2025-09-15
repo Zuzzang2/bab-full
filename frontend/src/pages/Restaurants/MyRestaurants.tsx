@@ -1,7 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchMyRestaurants, deleteMyRestaurantById } from '@/api/restaurant';
-import { Restaurant, RestaurantListResponse } from '@/types/restaurant';
+import {
+    fetchMyRestaurants,
+    deleteMyRestaurantById,
+    fetchMyLists,
+} from '@/api/restaurant';
+import {
+    Restaurant,
+    RestaurantList,
+    RestaurantListResponse,
+} from '@/types/restaurant';
 
 type SortType = 'latest' | 'oldest' | 'title';
 
@@ -14,15 +22,32 @@ function MyRestaurants() {
     const [sort, setSort] = useState<SortType>('latest');
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [inputValue, setInputValue] = useState<string>('');
+    const [myLists, setMyLists] = useState<RestaurantList[]>([]);
+    const [selectedListId, setSelectedListId] = useState<number | null>(null);
 
     const navigate = useNavigate();
 
+    // 리스트 목록 가져오기 (최초 1회)
+    useEffect(() => {
+        const loadLists = async () => {
+            try {
+                const data = await fetchMyLists();
+                setMyLists(data);
+            } catch (err) {
+                console.error('리스트 가져오기 실패', err);
+            }
+        };
+        loadLists();
+    }, []);
+
+    // 정렬/검색이 바뀌면 목록 초기화
     useEffect(() => {
         setRestaurants([]);
         setPage(1);
         setHasMore(true);
     }, [sort, searchTerm]);
 
+    // 페이지/정렬/검색 조건에 따라 목록 로드
     useEffect(() => {
         if (!hasMore) return;
         loadRestaurants(page, sort, searchTerm);
@@ -79,6 +104,20 @@ function MyRestaurants() {
     return (
         <div className="max-w-lg mx-auto mt-10">
             <h2 className="text-xl font-bold mb-4">내가 저장한 전체 맛집</h2>
+
+            {/* 나의 리스트 드롭다운 */}
+            {myLists.length > 0 && (
+                <div className="mb-4">
+                    <label className="mr-2 font-semibold">나의 리스트:</label>
+                    <select className="border rounded px-2 py-1">
+                        {myLists.map((list) => (
+                            <option key={list.id} value={list.id}>
+                                {list.title} – {list.description}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            )}
 
             <div className="mb-4 flex items-center gap-4">
                 {/* 검색 */}

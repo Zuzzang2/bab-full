@@ -7,6 +7,7 @@ import {
     FetchMyRestaurantsParams,
     FetchMyListRestaurantsParams,
     CreateRestaurantListDto,
+    RestaurantList,
 } from '@/types/restaurant';
 
 // 내가 저장한 전체 맛집 목록 조회 (페이지네이션/검색/정렬)
@@ -38,6 +39,12 @@ export const fetchMyListRestaurants = async ({
             },
         },
     );
+    return res.data;
+};
+
+// 내 리스트 전체
+export const fetchMyLists = async (): Promise<RestaurantList[]> => {
+    const res = await api.get('/restaurants/list');
     return res.data;
 };
 

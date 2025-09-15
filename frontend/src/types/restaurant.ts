@@ -55,3 +55,9 @@ export type CreateRestaurantListDto = {
     title: string;
     description?: string;
 };
+
+export type RestaurantList = {
+    id: number;
+    title: string;
+    description: string;
+};
