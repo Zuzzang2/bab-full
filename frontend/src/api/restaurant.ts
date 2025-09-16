@@ -70,7 +70,7 @@ export const fetchRestaurantsSavedByUserId = async (): Promise<
 export const fetchMyRestaurantDetailById = async (
     id: number,
 ): Promise<Restaurant> => {
-    const res = await api.get(`/restaurants/detail/${id}`);
+    const res = await api.get(`/restaurants/${id}`);
     return res.data;
 };
 

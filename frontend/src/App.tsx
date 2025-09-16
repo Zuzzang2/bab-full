@@ -5,10 +5,10 @@ import Search from './pages/Restaurants/Search';
 import SearchResults from './pages/Restaurants/SearchResult';
 import Home from './pages/Home/Home';
 import Layout from './components/Layout';
-import Detail from './pages/Restaurants/Detail';
 import MyRestaurants from './pages/Restaurants/MyRestaurants';
 import CreateList from './pages/Restaurants/CreateList';
 import { AuthProvider } from './contexts/AuthContext';
+import RestaurantDetail from './pages/Restaurants/RestaurantDetail';
 
 function App() {
     return (
@@ -23,10 +23,22 @@ function App() {
                             path="/my-restaurants"
                             element={<MyRestaurants />}
                         />
-                        <Route path="/search" element={<Search />} />
-                        <Route path="/results" element={<SearchResults />} />
-                        <Route path="/mylist/:id" element={<Detail />} />
-                        <Route path="/create-list" element={<CreateList />} />
+                        <Route
+                            path="/restaurants/search"
+                            element={<Search />}
+                        />
+                        <Route
+                            path="/restaurants/results"
+                            element={<SearchResults />}
+                        />
+                        <Route
+                            path="/restaurants/:id"
+                            element={<RestaurantDetail />}
+                        />
+                        <Route
+                            path="/my-restaurants/create-list"
+                            element={<CreateList />}
+                        />
                     </Routes>
                 </Layout>
             </BrowserRouter>

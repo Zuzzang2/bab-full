@@ -88,7 +88,7 @@ function MyRestaurants() {
             const res: RestaurantListResponse = await fetchMyRestaurants({
                 page: pageNumber,
                 sort: sortParam,
-                title: title,
+                title,
             });
 
             const { total, page, pageSize, data } = res;
