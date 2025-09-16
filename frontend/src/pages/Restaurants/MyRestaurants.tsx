@@ -4,6 +4,7 @@ import {
     fetchMyRestaurants,
     deleteMyRestaurantById,
     fetchMyLists,
+    fetchMyListRestaurants,
 } from '@/api/restaurant';
 import {
     Restaurant,
@@ -41,20 +42,26 @@ function MyRestaurants() {
 
     // 정렬/검색이 바뀌면 목록 초기화
     useEffect(() => {
+        resetRestaurants();
+    }, [sort, searchTerm, selectedListId]);
+
+    // 페이지 변경 시, 해당 조건으로 맛집 목록 로드
+    useEffect(() => {
+        if (!hasMore) return;
+        loadRestaurants(page, sort, searchTerm, selectedListId);
+    }, [page, sort, searchTerm, selectedListId]);
+
+    const resetRestaurants = () => {
         setRestaurants([]);
         setPage(1);
         setHasMore(true);
-    }, [sort, searchTerm]);
+    };
 
-    // 페이지/정렬/검색 조건에 따라 목록 로드
-    useEffect(() => {
-        if (!hasMore) return;
-        loadRestaurants(page, sort, searchTerm);
-    }, [page, sort, searchTerm]);
-
+    // 드롭다운 리스트 변경 핸들러
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const id = Number(e.target.value);
+        const id = e.target.value ? Number(e.target.value) : null;
         setSelectedListId(id);
+        resetRestaurants();
     };
 
     const handleDelete = async (id: number) => {
@@ -83,14 +90,27 @@ function MyRestaurants() {
         pageNumber: number,
         sortParam: string,
         title: string,
+        listId?: number | null,
     ) => {
         try {
-            const res: RestaurantListResponse = await fetchMyRestaurants({
-                page: pageNumber,
-                sort: sortParam,
-                title,
-            });
+            let res: RestaurantListResponse;
 
+            if (listId) {
+                // 특정 리스트에 속한 맛집 목록 조회
+                res = await fetchMyListRestaurants({
+                    listId,
+                    page: pageNumber,
+                    sort: sortParam,
+                    title,
+                });
+            } else {
+                // 전체 맛집 목록 조회
+                res = await fetchMyRestaurants({
+                    page: pageNumber,
+                    sort: sortParam,
+                    title,
+                });
+            }
             const { total, page, pageSize, data } = res;
 
             setRestaurants((prev) => [...prev, ...data]);

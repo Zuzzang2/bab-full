@@ -28,6 +28,7 @@ export type RestaurantListResponse = {
     page: number;
     pageSize: number;
     data: Restaurant[];
+    listId?: number | null;
 };
 
 export type SearchRestaurantResponse = {
