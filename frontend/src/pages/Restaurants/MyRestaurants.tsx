@@ -10,6 +10,7 @@ import {
     RestaurantList,
     RestaurantListResponse,
 } from '@/types/restaurant';
+import RestaurantItem from '@/components/RestaurantItem';
 
 type SortType = 'latest' | 'oldest' | 'title';
 
@@ -177,24 +178,13 @@ function MyRestaurants() {
             {/* 맛집 목록 */}
             <ul className="space-y-2">
                 {restaurants.map((restaurant) => (
-                    <li key={restaurant.id} className="border p-2 rounded">
-                        <div className="flex justify-between items-center">
-                            <div>
-                                <h3 className="font-semibold">
-                                    {restaurant.title}
-                                </h3>
-                                <p className="text-sm text-gray-600">
-                                    {restaurant.address}
-                                </p>
-                            </div>
-                            <button
-                                onClick={() => handleDelete(restaurant.id)}
-                                className="text-red-500 hover:underline"
-                            >
-                                삭제
-                            </button>
-                        </div>
-                    </li>
+                    <RestaurantItem
+                        key={restaurant.id}
+                        id={restaurant.id}
+                        title={restaurant.title}
+                        address={restaurant.address}
+                        onDelete={handleDelete}
+                    />
                 ))}
             </ul>
 
