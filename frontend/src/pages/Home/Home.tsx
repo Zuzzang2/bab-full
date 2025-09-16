@@ -12,8 +12,8 @@ function Home() {
         { title: '저장된 전체 맛집 목록', path: '/my-restaurants' },
         { title: '회원가입', path: '/signup' },
         { title: '로그인', path: '/login' },
-        { title: '맛집 검색', path: '/search' },
-        { title: '나의 리스트 만들기', path: '/create-list' },
+        { title: '맛집 검색', path: 'restaurants/search' },
+        { title: '나의 리스트 만들기', path: 'my-restaurants/create-list' },
     ];
 
     return (

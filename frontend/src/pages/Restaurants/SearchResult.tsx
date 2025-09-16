@@ -14,6 +14,7 @@ function SearchResults() {
     const [error, setError] = useState<string>('');
     const [savedroadAddress, setSavedroadAddress] = useState<string[]>([]);
 
+    // 이미 저장된 맛집 확인
     useEffect(() => {
         const fetchSaved = async () => {
             try {

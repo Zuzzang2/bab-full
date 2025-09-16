@@ -62,7 +62,7 @@ export const searchAllRestaurants = async (
 export const fetchRestaurantsSavedByUserId = async (): Promise<
     Restaurant[]
 > => {
-    const res = await api.get('/restaurants/check-saved');
+    const res = await api.get('/restaurants/check-duplicate');
     return res.data;
 };
 

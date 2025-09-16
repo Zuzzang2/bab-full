@@ -8,7 +8,7 @@ function Search() {
     const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();
         if (!query.trim()) return;
-        navigate(`/results?query=${encodeURIComponent(query)}`);
+        navigate(`/restaurants/results?query=${encodeURIComponent(query)}`);
     };
 
     return (
