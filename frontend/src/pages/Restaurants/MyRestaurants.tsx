@@ -108,26 +108,32 @@ function MyRestaurants() {
         <div className="max-w-lg mx-auto mt-10">
             <h2 className="text-xl font-bold mb-4">내가 저장한 전체 맛집</h2>
 
-            {/* 나의 리스트 드롭다운 */}
-            {myLists.length > 0 && (
-                <div className="mb-4">
-                    <label className="mr-2 font-semibold">나의 리스트:</label>
-                    <select
-                        value={selectedListId ?? ''}
-                        onChange={handleChange}
-                        className="border rounded px-2 py-1"
-                    >
-                        <option value="" disabled>
-                            리스트를 선택하세요
-                        </option>
-                        {myLists.map((list) => (
+            {/* 리스트 드롭다운 */}
+            <div className="mb-4">
+                <label className="mr-2 font-semibold">나의 리스트:</label>
+                <select
+                    value={selectedListId ?? ''}
+                    onChange={handleChange}
+                    className="border rounded px-2 py-1"
+                >
+                    {/* 전체 목록 보기 옵션 */}
+                    <option value="">전체 맛집 목록</option>
+
+                    {/* 리스트가 있다면 */}
+                    {myLists.length > 0 ? (
+                        myLists.map((list) => (
                             <option key={list.id} value={list.id}>
-                                {list.title} – {list.description}
+                                {list.title}
                             </option>
-                        ))}
-                    </select>
-                </div>
-            )}
+                        ))
+                    ) : (
+                        // 리스트 없을 때는 안내 메시지
+                        <option value="" disabled>
+                            등록된 리스트가 없습니다
+                        </option>
+                    )}
+                </select>
+            </div>
 
             {/* 검색 및 정렬 */}
             <div className="mb-4 flex items-center gap-4">
