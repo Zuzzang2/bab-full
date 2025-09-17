@@ -76,10 +76,10 @@ export const fetchMyRestaurantDetailById = async (
 
 // 저장된 전체 맛집 목록 중 특정 맛집 삭제
 export const deleteMyRestaurantById = async (
-    id: number,
+    restaurantId: number,
 ): Promise<{ message: string }> => {
     const res = await api.delete<{ message: string }>(
-        `/restaurants/delete/${id}`,
+        `/restaurants/${restaurantId}`,
     );
     return res.data;
 };

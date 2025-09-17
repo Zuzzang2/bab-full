@@ -5,6 +5,7 @@ import {
     deleteMyRestaurantById,
     fetchMyLists,
     fetchMyListRestaurants,
+    deleteRestaurantFromList,
 } from '@/api/restaurant';
 import {
     Restaurant,
@@ -25,6 +26,9 @@ function MyRestaurants() {
     const [inputValue, setInputValue] = useState<string>('');
     const [myLists, setMyLists] = useState<RestaurantList[]>([]);
     const [selectedListId, setSelectedListId] = useState<number | null>(null);
+    const [selectedListTitle, setSelectedListTitle] = useState<string | null>(
+        null,
+    );
 
     // 리스트 목록 가져오기 (최초 1회)
     useEffect(() => {
@@ -60,18 +64,35 @@ function MyRestaurants() {
     // 드롭다운 리스트 변경 핸들러
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const id = e.target.value ? Number(e.target.value) : null;
+        const title = e.target.selectedOptions[0]?.text || null;
+
         setSelectedListId(id);
+        setSelectedListTitle(title);
         resetRestaurants();
     };
 
-    const handleDelete = async (id: number) => {
-        const confirmDelete = window.confirm('정말 삭제하시겠습니까?');
+    const handleDelete = async (restaurantId: number) => {
+        const contextMessage = selectedListTitle
+            ? `'${selectedListTitle}' 리스트에서 삭제하시겠습니까?`
+            : '전체 목록에서 삭제하시겠습니까?';
+
+        const confirmDelete = window.confirm(contextMessage);
         if (!confirmDelete) return;
 
         try {
-            const data = await deleteMyRestaurantById(id);
+            let data: { message: string };
+
+            if (selectedListId) {
+                data = await deleteRestaurantFromList(
+                    restaurantId,
+                    selectedListId,
+                );
+            } else {
+                data = await deleteMyRestaurantById(restaurantId);
+            }
+
             alert(data.message);
-            setRestaurants((prev) => prev.filter((r) => r.id !== id));
+            setRestaurants((prev) => prev.filter((r) => r.id !== restaurantId));
         } catch (err) {
             console.error(err);
             alert('삭제에 실패했습니다.');
