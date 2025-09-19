@@ -9,6 +9,12 @@ export type Restaurant = {
     telephone?: string;
     mapx: string;
     mapy: string;
+    includedLists?: IncludedList[];
+};
+
+export type IncludedList = {
+    listId: number;
+    listTitle: string;
 };
 
 export type CreateRestaurantDto = {

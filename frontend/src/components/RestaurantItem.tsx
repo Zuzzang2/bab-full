@@ -5,6 +5,10 @@ interface RestaurantItemProps {
     id: number;
     title: string;
     address: string;
+    includedLists?: {
+        listId: number;
+        listTitle: string;
+    };
     onDelete: (id: number) => void;
 }
 
@@ -12,6 +16,7 @@ export default function RestaurantItem({
     id,
     title,
     address,
+    includedLists = [],
     onDelete,
 }: RestaurantItemProps) {
     const navigate = useNavigate();
@@ -50,12 +55,17 @@ export default function RestaurantItem({
 
     return (
         <li
-            className="relative border p-2 rounded cursor-pointer hover:bg-gray-100"
+            className="relative border p-3 rounded cursor-pointer hover:bg-gray-100"
             onClick={handleClick}
         >
             <div className="flex justify-between items-center">
                 <div>
-                    <h3 className="font-semibold">{title}</h3>
+                    <h3 className="font-semibold pb-2">{title}</h3>
+                    <p className="text-sm text-gray-500">
+                        {includedLists
+                            ?.map((list) => list.listTitle)
+                            .join(', ')}
+                    </p>
                     <p className="text-sm text-gray-600">{address}</p>
                 </div>
 
@@ -63,9 +73,13 @@ export default function RestaurantItem({
                 <div className="relative" ref={dropdownRef}>
                     <button
                         onClick={handleToggleDropdown}
-                        className="text-red-500 hover:underline"
+                        className="w-5 h-5 m-3"
                     >
-                        삭제
+                        <img
+                            src="/images/menu-icon.png"
+                            alt="삭제"
+                            className="w-full h-full object-contain "
+                        />
                     </button>
 
                     {/* 드롭다운 모달 */}

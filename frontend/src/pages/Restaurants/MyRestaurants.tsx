@@ -133,6 +133,7 @@ function MyRestaurants() {
                 });
             }
             const { total, page, pageSize, data } = res;
+            console.log('맛집 목록:', data);
 
             setRestaurants((prev) => [...prev, ...data]);
 
@@ -224,6 +225,7 @@ function MyRestaurants() {
                         id={restaurant.id}
                         title={restaurant.title}
                         address={restaurant.address}
+                        includedLists={restaurant.includedLists ?? []}
                         onDelete={handleDelete}
                     />
                 ))}
