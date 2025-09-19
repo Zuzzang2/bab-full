@@ -36,7 +36,6 @@ function MyRestaurants() {
             try {
                 const data = await fetchMyLists();
                 setMyLists(data);
-                console.log('리스트 목록:', data);
             } catch (err) {
                 console.error('리스트 가져오기 실패', err);
             }
@@ -225,7 +224,7 @@ function MyRestaurants() {
                         id={restaurant.id}
                         title={restaurant.title}
                         address={restaurant.address}
-                        includedLists={restaurant.includedLists ?? []}
+                        includedLists={restaurant.includedLists}
                         onDelete={handleDelete}
                     />
                 ))}

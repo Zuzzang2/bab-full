@@ -1,3 +1,4 @@
+import { IncludedList } from '@/types/restaurant';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -5,10 +6,7 @@ interface RestaurantItemProps {
     id: number;
     title: string;
     address: string;
-    includedLists?: {
-        listId: number;
-        listTitle: string;
-    };
+    includedLists?: IncludedList[];
     onDelete: (id: number) => void;
 }
 
@@ -16,7 +14,7 @@ export default function RestaurantItem({
     id,
     title,
     address,
-    includedLists = [],
+    includedLists,
     onDelete,
 }: RestaurantItemProps) {
     const navigate = useNavigate();
@@ -60,12 +58,19 @@ export default function RestaurantItem({
         >
             <div className="flex justify-between items-center">
                 <div>
-                    <h3 className="font-semibold pb-2">{title}</h3>
-                    <p className="text-sm text-gray-500">
-                        {includedLists
-                            ?.map((list) => list.listTitle)
-                            .join(', ')}
-                    </p>
+                    <div className="flex items-center flex-wrap gap-2 pb-2">
+                        <h3 className="font-semibold">{title}</h3>
+
+                        {includedLists?.map((list) => (
+                            <span
+                                key={list.listId}
+                                className="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full"
+                            >
+                                {list.listTitle}
+                            </span>
+                        ))}
+                    </div>
+
                     <p className="text-sm text-gray-600">{address}</p>
                 </div>
 
