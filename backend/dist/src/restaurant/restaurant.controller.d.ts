@@ -18,6 +18,7 @@ export declare class RestaurantController {
         data: {
             id: number;
             title: string;
+            address: string;
             includedLists: {
                 listId: number;
                 listTitle: string;
@@ -46,7 +47,15 @@ export declare class RestaurantController {
         total: number;
         page: number;
         pageSize: number;
-        data: import("./entity/restaurant.entity").RestaurantEntity[];
+        data: {
+            id: number;
+            title: string;
+            address: string;
+            includedLists: {
+                listId: number;
+                listTitle: string;
+            }[];
+        }[];
     }>;
     createMyRestaurant(req: any, createRestaurantDto: CreateRestaurantDto): Promise<import("./entity/restaurant.entity").RestaurantEntity>;
 }

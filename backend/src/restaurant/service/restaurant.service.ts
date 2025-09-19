@@ -100,6 +100,8 @@ export class RestaurantService {
 
         const qb = this.restaurantRepository
             .createQueryBuilder('restaurant')
+            .leftJoinAndSelect('restaurant.items', 'item')
+            .leftJoinAndSelect('item.list', 'list')
             .where('restaurant.userId = :userId', { userId });
 
         if (title) {
@@ -111,11 +113,22 @@ export class RestaurantService {
         qb.orderBy(orderByColumn, orderDirection).take(take).skip(skip);
 
         const [restaurants, total] = await qb.getManyAndCount();
+        const result = restaurants.map((restaurant) => ({
+            id: restaurant.id,
+            title: restaurant.title,
+            address: restaurant.roadAddress,
+            includedLists: restaurant.items
+                .filter((item) => item.list) // null 방지
+                .map((item) => ({
+                    listId: item.list.id,
+                    listTitle: item.list.title,
+                })),
+        }));
         return {
             total,
             page,
             pageSize: take,
-            data: restaurants,
+            data: result,
         };
     }
 
@@ -182,6 +195,7 @@ export class RestaurantService {
         const result = restaurants.map((restaurant) => ({
             id: restaurant.id,
             title: restaurant.title,
+            address: restaurant.roadAddress,
             // 다른 필요한 필드만 선택적으로 추출
             includedLists: restaurant.items
                 .filter((item) => item.list) // null 방지
