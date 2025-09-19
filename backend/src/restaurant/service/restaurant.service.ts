@@ -157,11 +157,12 @@ export class RestaurantService {
         // 쿼리빌더로 조인 (ListItem 통해 userId 필터링)
         const qb = this.restaurantRepository
             .createQueryBuilder('restaurant')
-            .leftJoin('restaurant.items', 'listItem')
+            .leftJoinAndSelect('restaurant.items', 'item')
+            .leftJoinAndSelect('item.list', 'list')
             .innerJoin(
-                'listItem.list',
-                'list',
-                'list.id = :listId AND list.userId = :userId',
+                'item.list',
+                'targetList',
+                'targetList.id = :listId AND targetList.userId = :userId',
                 {
                     listId: Number(listId),
                     userId: Number(userId),
@@ -178,11 +179,23 @@ export class RestaurantService {
 
         const [restaurants, total] = await qb.getManyAndCount();
 
+        const result = restaurants.map((restaurant) => ({
+            id: restaurant.id,
+            title: restaurant.title,
+            // 다른 필요한 필드만 선택적으로 추출
+            includedLists: restaurant.items
+                .filter((item) => item.list) // null 방지
+                .map((item) => ({
+                    listId: item.list.id,
+                    listTitle: item.list.title,
+                })),
+        }));
+
         return {
             total, // 전체 맛집 개수
             page, // 현재 페이지
             pageSize: take,
-            data: restaurants, // 5개 단위 맛집 데이터
+            data: result, // 5개 단위 맛집 데이터
         };
     }
 

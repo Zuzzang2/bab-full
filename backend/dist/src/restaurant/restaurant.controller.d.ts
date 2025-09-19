@@ -15,7 +15,14 @@ export declare class RestaurantController {
         total: number;
         page: number;
         pageSize: number;
-        data: import("./entity/restaurant.entity").RestaurantEntity[];
+        data: {
+            id: number;
+            title: string;
+            includedLists: {
+                listId: number;
+                listTitle: string;
+            }[];
+        }[];
     }>;
     addRestaurantToList(req: any, listId: number, dto: CreateRestaurantListItemsDto): Promise<import("./entity/restaurant-list-items").RestaurantListItemsEntity>;
     findAllMyLists(req: any): Promise<{
