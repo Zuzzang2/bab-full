@@ -6,6 +6,7 @@ import {
     fetchMyLists,
     fetchMyListRestaurants,
     deleteRestaurantFromList,
+    createMyRestaurantToList,
 } from '@/api/restaurant';
 import {
     RestaurantResponse,
@@ -95,6 +96,25 @@ function MyRestaurants() {
         } catch (err) {
             console.error(err);
             alert('삭제에 실패했습니다.');
+        }
+    };
+
+    const handlePost = async (restaurantId: number) => {
+        const contextMessage = `'${selectedListTitle}' 리스트에 추가하시겠습니까?`;
+
+        const confirmPost = window.confirm(contextMessage);
+        if (!confirmPost) return;
+
+        try {
+            if (selectedListId !== null) {
+                await createMyRestaurantToList(selectedListId, restaurantId);
+                alert('리스트에 성공적으로 추가되었습니다.');
+            } else {
+                alert('리스트가 선택되지 않았습니다.');
+            }
+        } catch (error) {
+            console.error('리스트 추가 실패:', error);
+            alert('리스트 추가에 실패했습니다.');
         }
     };
 
@@ -226,6 +246,7 @@ function MyRestaurants() {
                         address={restaurant.address}
                         includedLists={restaurant.includedLists}
                         onDelete={handleDelete}
+                        onPost={handlePost}
                     />
                 ))}
             </ul>

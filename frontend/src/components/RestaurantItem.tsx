@@ -8,6 +8,7 @@ interface RestaurantItemProps {
     address: string;
     includedLists?: IncludedList[];
     onDelete: (id: number) => void;
+    onPost: (id: number) => void;
 }
 
 export default function RestaurantItem({
@@ -16,10 +17,13 @@ export default function RestaurantItem({
     address,
     includedLists,
     onDelete,
+    onPost,
 }: RestaurantItemProps) {
     const navigate = useNavigate();
     const [showDropdown, setShowDropdown] = useState(false);
-    const dropdownRef = useRef<HTMLDivElement | null>(null);
+    // const dropdownRef = useRef<HTMLDivElement | null>(null);
+    const [showSubmenu, setShowSubmenu] = useState(false);
+    const dropdownTimerRef = useRef<NodeJS.Timeout | null>(null);
 
     const handleClick = () => {
         navigate(`/restaurants/${id}`);
@@ -35,21 +39,24 @@ export default function RestaurantItem({
         onDelete(id);
         setShowDropdown(false);
     };
+    // const handleConfirmPost = (e: React.MouseEvent) => {
+    //     e.stopPropagation();
+    //     onPost(id);
+    //     setShowDropdown(false);
+    // };
 
-    // 외부 클릭 시 드롭다운 닫기
-    useEffect(() => {
-        const handleClickOutside = (e: MouseEvent) => {
-            if (
-                dropdownRef.current &&
-                !dropdownRef.current.contains(e.target as Node)
-            ) {
-                setShowDropdown(false);
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () =>
-            document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
+    const handleMouseEnter = () => {
+        if (dropdownTimerRef.current) {
+            clearTimeout(dropdownTimerRef.current);
+        }
+    };
+
+    const handleMouseLeave = () => {
+        dropdownTimerRef.current = setTimeout(() => {
+            setShowDropdown(false);
+            setShowSubmenu(false);
+        }, 100); // 약간의 여유를 줘서 끊기지 않게
+    };
 
     return (
         <li
@@ -75,7 +82,11 @@ export default function RestaurantItem({
                 </div>
 
                 {/* 메뉴 */}
-                <div className="relative" ref={dropdownRef}>
+                <div
+                    className="relative"
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                >
                     <button onClick={handleToggleDropdown} className="p-3">
                         <img
                             src="/images/menu-icon.png"
@@ -84,21 +95,43 @@ export default function RestaurantItem({
                         />
                     </button>
 
-                    {/* 드롭다운 모달 */}
                     {showDropdown && (
-                        <div className="absolute right-0 top-8 z-10 w-40 bg-white shadow-md rounded p-2 border text-sm">
-                            <button
-                                onClick={handleConfirmDelete}
-                                className="w-full text-left text-blue-600 hover:underline"
-                            >
-                                리스트에 추가
-                            </button>
-                            <button
-                                onClick={handleConfirmDelete}
-                                className="w-full text-left text-red-600 hover:underline"
-                            >
-                                삭제
-                            </button>
+                        <div className="absolute right-0 top-8 z-10 w-40 bg-white shadow-md rounded p-2 border text-sm flex">
+                            <div className="flex flex-col w-full relative">
+                                <button
+                                    onMouseEnter={() => setShowSubmenu(true)}
+                                    className="w-full text-left text-blue-600 hover:underline"
+                                >
+                                    리스트에 추가
+                                </button>
+
+                                <button
+                                    onClick={handleConfirmDelete}
+                                    className="w-full text-left text-red-600 hover:underline"
+                                >
+                                    삭제
+                                </button>
+
+                                {/* 서브 메뉴 */}
+                                {showSubmenu && (
+                                    <div className="absolute left-full top-0 ml-2 w-40 bg-white border rounded shadow z-20">
+                                        <ul className="text-sm text-gray-700">
+                                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                                데이트 맛집
+                                            </li>
+                                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                                야식 리스트
+                                            </li>
+                                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                                가족 외식
+                                            </li>
+                                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-blue-600">
+                                                더보기
+                                            </li>
+                                        </ul>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     )}
                 </div>

@@ -105,9 +105,9 @@ export const createMyRestaurant = async (
 // 특정 리스트에 맛집 추가
 export const createMyRestaurantToList = async (
     listId: number,
-    payload: CreateRestaurantDto,
+    restaurantId: number,
 ): Promise<void> => {
-    await api.post(`/restaurants/list/${listId}`, payload);
+    await api.post(`/restaurants/list/${listId}`, { restaurantId });
 };
 
 // 리스트 생성
