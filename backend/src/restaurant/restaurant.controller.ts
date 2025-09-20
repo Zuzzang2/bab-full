@@ -42,7 +42,7 @@ export class RestaurantController {
         return this.restaurantService.findSavedByUserId(req.user.userId);
     }
 
-    // 해당 리스트의 맛집 목록
+    // 특정 리스트의 맛집 목록
     @UseGuards(JwtAuthGuard)
     @Get('/list/:listId')
     findMyRestaurantListItems(
@@ -61,7 +61,7 @@ export class RestaurantController {
         );
     }
 
-    // 특정 맛집 리스트에 맛집 추가
+    // 특정 리스트에 맛집 추가
     @Post('/list/:listId')
     @UseGuards(JwtAuthGuard)
     async addRestaurantToList(
@@ -115,7 +115,7 @@ export class RestaurantController {
         return this.restaurantService.removeMyRestaurant(req.user.userId, id);
     }
 
-    // 해당 리스트에서 맛집 삭제
+    // 특정 리스트에서 맛집 삭제
     @UseGuards(JwtAuthGuard)
     @Delete('/:restaurantId/list/:listId')
     removeRestaurantFromList(
