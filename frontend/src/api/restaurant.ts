@@ -1,7 +1,7 @@
 import api from '@/api/axiosInstance';
 import {
     CreateRestaurantDto,
-    Restaurant,
+    RestaurantResponse,
     RestaurantListResponse,
     SearchRestaurantResponse,
     FetchMyRestaurantsParams,
@@ -60,7 +60,7 @@ export const searchAllRestaurants = async (
 
 // 검색 시 전체 맛집 목록에서 중복 확인
 export const fetchRestaurantsSavedByUserId = async (): Promise<
-    Restaurant[]
+    RestaurantResponse[]
 > => {
     const res = await api.get('/restaurants/check-duplicate');
     return res.data;
@@ -69,7 +69,7 @@ export const fetchRestaurantsSavedByUserId = async (): Promise<
 // 내가 저장한 맛집 상세 정보
 export const fetchMyRestaurantDetailById = async (
     id: number,
-): Promise<Restaurant> => {
+): Promise<RestaurantResponse> => {
     const res = await api.get(`/restaurants/${id}`);
     return res.data;
 };

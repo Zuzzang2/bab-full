@@ -1,4 +1,4 @@
-export type Restaurant = {
+export type RestaurantResponse = {
     id: number;
     title: string;
     address: string;
@@ -33,7 +33,7 @@ export type RestaurantListResponse = {
     total: number;
     page: number;
     pageSize: number;
-    data: Restaurant[];
+    data: RestaurantResponse[];
     listId?: number | null;
 };
 
@@ -42,7 +42,7 @@ export type SearchRestaurantResponse = {
     total: number;
     start: number;
     display: number;
-    items: Restaurant[];
+    items: RestaurantResponse[];
 };
 
 export type FetchMyRestaurantsParams = {

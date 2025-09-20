@@ -8,7 +8,7 @@ import {
     deleteRestaurantFromList,
 } from '@/api/restaurant';
 import {
-    Restaurant,
+    RestaurantResponse,
     RestaurantList,
     RestaurantListResponse,
 } from '@/types/restaurant';
@@ -17,7 +17,7 @@ import RestaurantItem from '@/components/RestaurantItem';
 type SortType = 'latest' | 'oldest' | 'title';
 
 function MyRestaurants() {
-    const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
+    const [restaurants, setRestaurants] = useState<RestaurantResponse[]>([]);
     const [page, setPage] = useState<number>(1);
     const [error, setError] = useState<string>('');
     const [hasMore, setHasMore] = useState<boolean>(true);

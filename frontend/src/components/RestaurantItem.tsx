@@ -74,16 +74,13 @@ export default function RestaurantItem({
                     <p className="text-sm text-gray-600">{address}</p>
                 </div>
 
-                {/* 삭제 버튼 (드롭다운 열기용) */}
+                {/* 메뉴 */}
                 <div className="relative" ref={dropdownRef}>
-                    <button
-                        onClick={handleToggleDropdown}
-                        className="w-5 h-5 m-3"
-                    >
+                    <button onClick={handleToggleDropdown} className="p-3">
                         <img
                             src="/images/menu-icon.png"
-                            alt="삭제"
-                            className="w-full h-full object-contain "
+                            alt="메뉴"
+                            className="w-5 h-5 object-contain"
                         />
                     </button>
 
@@ -92,18 +89,15 @@ export default function RestaurantItem({
                         <div className="absolute right-0 top-8 z-10 w-40 bg-white shadow-md rounded p-2 border text-sm">
                             <button
                                 onClick={handleConfirmDelete}
-                                className="w-full text-left text-red-600 hover:underline"
+                                className="w-full text-left text-blue-600 hover:underline"
                             >
-                                삭제하기
+                                리스트에 추가
                             </button>
                             <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setShowDropdown(false);
-                                }}
-                                className="w-full text-left mt-1 text-gray-500 hover:underline"
+                                onClick={handleConfirmDelete}
+                                className="w-full text-left text-red-600 hover:underline"
                             >
-                                취소
+                                삭제
                             </button>
                         </div>
                     )}
