@@ -1,4 +1,4 @@
-import { fetchMyLists } from '@/api/restaurant';
+import { fetchMyLists, createMyRestaurantToList } from '@/api/restaurant';
 import { IncludedList, RestaurantList } from '@/types/restaurant';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -43,6 +43,28 @@ export default function RestaurantItem({
         onDelete(id);
         setShowDropdown(false);
         setShowSubmenu(false);
+    };
+
+    const handleAddToList = async (
+        e: React.MouseEvent,
+        listId: number,
+        listTitle: string,
+    ) => {
+        e.stopPropagation();
+        try {
+            await createMyRestaurantToList(listId, id);
+            alert(`${listTitle} 리스트에 추가되었습니다.`);
+            setShowDropdown(false);
+            setShowSubmenu(false);
+        } catch (error) {
+            const errorData = (error as any).response.data;
+            if (errorData?.message) {
+                alert(errorData.message);
+            } else {
+                console.error('리스트 추가 실패:', error);
+                alert('리스트 추가에 실패했습니다.');
+            }
+        }
     };
 
     // 리스트 목록 가져오기 (최초 1회)
@@ -141,6 +163,13 @@ export default function RestaurantItem({
                                                         key={list.id}
                                                         value={list.id}
                                                         className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                                                        onClick={(e) =>
+                                                            handleAddToList(
+                                                                e,
+                                                                list.id,
+                                                                list.title,
+                                                            )
+                                                        }
                                                     >
                                                         {list.title}
                                                     </li>
