@@ -172,15 +172,6 @@ export class RestaurantService {
             .createQueryBuilder('restaurant')
             .leftJoinAndSelect('restaurant.items', 'item')
             .leftJoinAndSelect('item.list', 'list')
-            // .innerJoin(
-            //     'item.list',
-            //     'targetList',
-            //     'targetList.id = :listId AND targetList.userId = :userId',
-            //     {
-            //         listId: Number(listId),
-            //         userId: Number(userId),
-            //     },
-            // );
             .where(
                 (qb) => {
                     const subQuery = qb
