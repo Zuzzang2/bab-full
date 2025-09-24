@@ -21,9 +21,15 @@ export class AuthService {
 
     async signup(dto: SignupDto) {
         const exists = await this.userRepo.findOne({
-            where: { email: dto.email },
+            where: [{ email: dto.email }, { nickname: dto.nickname }],
         });
-        if (exists) throw new ConflictException('이미 가입된 이메일입니다.');
+        if (exists)
+            if (exists.email === dto.email) {
+                throw new ConflictException('이미 가입된 이메일입니다.');
+            }
+        if (exists?.nickname === dto.nickname) {
+            throw new ConflictException('이미 사용 중인 닉네임입니다.');
+        }
 
         const hashed = await bcrypt.hash(dto.password, 10);
         const user = this.userRepo.create({ ...dto, password: hashed });

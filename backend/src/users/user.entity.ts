@@ -19,6 +19,9 @@ export class User {
     @Column()
     password: string;
 
+    @Column({ unique: true })
+    nickname: string;
+
     @CreateDateColumn()
     createdAt: Date;
 
