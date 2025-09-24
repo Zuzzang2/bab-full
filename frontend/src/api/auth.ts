@@ -8,10 +8,15 @@ export const fetchUser = async (): Promise<User> => {
 
 export const signupUser = async (
     email: string,
+    nickname: string,
     password: string,
 ): Promise<{ message: string }> => {
     try {
-        const res = await api.post('/auth/signup', { email, password });
+        const res = await api.post('/auth/signup', {
+            email,
+            nickname,
+            password,
+        });
         return res.data;
     } catch (err) {
         const errorData = (err as any).response.data;
@@ -34,6 +39,7 @@ export const signupUser = async (
 
 export const loginUser = async (
     email: string,
+    nickname: string,
     password: string,
 ): Promise<{ message: string }> => {
     const res = await api.post('/auth/signin', { email, password });

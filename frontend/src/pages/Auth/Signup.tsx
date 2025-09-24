@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signupUser, loginUser, fetchUser } from '@/api/auth';
 import { useAuth } from '@/contexts/AuthContext';
+import axios from 'axios';
 
 export default function Signup() {
     const navigate = useNavigate();
     const { setUser } = useAuth();
 
     const [email, setEmail] = useState<string>('');
+    const [nickname, setNickname] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirm, setConfirm] = useState<string>('');
     const [error, setError] = useState<string>('');
@@ -22,8 +24,8 @@ export default function Signup() {
 
         try {
             // 회원가입 후 로그인
-            const data = await signupUser(email, password);
-            await loginUser(email, password);
+            const data = await signupUser(email, nickname, password);
+            await loginUser(email, nickname, password);
 
             // 로그인 후 사용자 정보를 백엔드에서 가져와서 Context에 업데이트
             const userData = await fetchUser();
@@ -31,11 +33,8 @@ export default function Signup() {
 
             alert(data.message);
             navigate('/');
-        } catch (err) {
-            // 구체적인 에러 메시지 표시
-            const errorMessage =
-                err instanceof Error ? err.message : '회원가입에 실패했습니다.';
-            setError(errorMessage);
+        } catch (err: any) {
+            alert(err.message);
         }
     };
 
@@ -48,6 +47,14 @@ export default function Signup() {
                     placeholder="이메일"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="w-full border px-3 py-2 rounded"
+                />
+                <input
+                    type="nickname"
+                    placeholder="닉네임"
+                    value={nickname}
+                    onChange={(e) => setNickname(e.target.value)}
                     required
                     className="w-full border px-3 py-2 rounded"
                 />
@@ -67,14 +74,6 @@ export default function Signup() {
                     required
                     className="w-full border px-3 py-2 rounded"
                 />
-
-                {error && (
-                    <div className="text-red-500 text-sm">
-                        {error.split('\n').map((line, index) => (
-                            <div key={index}>{line}</div>
-                        ))}
-                    </div>
-                )}
 
                 <button
                     type="submit"
