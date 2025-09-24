@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { fetchUser, loginUser } from '@/api/auth';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -7,8 +7,9 @@ function Login() {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [error, setError] = useState<string>('');
+    const { user, setUser, isLoading } = useAuth(); // Context에서 상태 가져옴
     const navigate = useNavigate();
-    const { setUser } = useAuth(); // Context에서 상태 가져옴
+    const location = useLocation();
 
     const handleLogin: React.FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
@@ -24,6 +25,19 @@ function Login() {
             setError('로그인 실패. 이메일 또는 비밀번호를 확인하세요.');
         }
     };
+
+    useEffect(() => {
+        if (!isLoading && user) {
+            alert('이미 로그인된 상태입니다.');
+
+            // 이전 페이지가 존재하면 뒤로가기, 아니면 홈으로
+            if (location.key !== 'default') {
+                navigate(-1);
+            } else {
+                navigate('/');
+            }
+        }
+    }, [user, isLoading, navigate, location]);
 
     return (
         <div className="max-w-sm mx-auto mt-20">

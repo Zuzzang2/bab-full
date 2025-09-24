@@ -1,13 +1,12 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { signupUser, loginUser, fetchUser } from '@/api/auth';
 import { useAuth } from '@/contexts/AuthContext';
-import axios from 'axios';
 
 export default function Signup() {
+    const { user, setUser, isLoading } = useAuth(); // Context에서 상태 가져옴
+    const location = useLocation();
     const navigate = useNavigate();
-    const { setUser } = useAuth();
-
     const [email, setEmail] = useState<string>('');
     const [nickname, setNickname] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -37,6 +36,19 @@ export default function Signup() {
             setError(err.message);
         }
     };
+
+    useEffect(() => {
+        if (!isLoading && user) {
+            alert('이미 로그인된 상태입니다.');
+
+            // 이전 페이지가 존재하면 뒤로가기, 아니면 홈으로
+            if (location.key !== 'default') {
+                navigate(-1);
+            } else {
+                navigate('/');
+            }
+        }
+    }, [user, isLoading, navigate, location]);
 
     return (
         <div className="max-w-md mx-auto mt-20 p-6 bg-white rounded shadow">
