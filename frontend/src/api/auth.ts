@@ -39,7 +39,6 @@ export const signupUser = async (
 
 export const loginUser = async (
     email: string,
-    nickname: string,
     password: string,
 ): Promise<{ message: string }> => {
     const res = await api.post('/auth/signin', { email, password });

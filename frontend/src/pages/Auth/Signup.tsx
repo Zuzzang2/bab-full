@@ -25,7 +25,7 @@ export default function Signup() {
         try {
             // 회원가입 후 로그인
             const data = await signupUser(email, nickname, password);
-            await loginUser(email, nickname, password);
+            await loginUser(email, password);
 
             // 로그인 후 사용자 정보를 백엔드에서 가져와서 Context에 업데이트
             const userData = await fetchUser();
@@ -34,7 +34,7 @@ export default function Signup() {
             alert(data.message);
             navigate('/');
         } catch (err: any) {
-            alert(err.message);
+            setError(err.message);
         }
     };
 
@@ -74,6 +74,8 @@ export default function Signup() {
                     required
                     className="w-full border px-3 py-2 rounded"
                 />
+
+                {error && <p className="text-red-500 mt-2">{error}</p>}
 
                 <button
                     type="submit"

@@ -19,7 +19,6 @@ function Login() {
             // 로그인 후 사용자 정보를 백엔드에서 가져와서 Context에 업데이트
             const userData = await fetchUser();
             setUser(userData);
-            alert(data.message);
             navigate('/');
         } catch (err) {
             setError('로그인 실패. 이메일 또는 비밀번호를 확인하세요.');
