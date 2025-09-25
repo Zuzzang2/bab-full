@@ -54,6 +54,26 @@ export class AuthService {
         const payload = { sub: user.id, email: user.email };
         const accessToken = this.jwtService.sign(payload, { expiresIn: '7d' });
 
-        return accessToken; // 쿠키에는 jwt문자열만 넣어야함.메세지는 따로 넣기.
+        return accessToken; // 쿠키에는 jwt문자열만 넣어야함.
+    }
+
+    async oauthLogin(googleUser: any): Promise<string> {
+        const { email, name } = googleUser;
+
+        let user = await this.userRepo.findOne({ where: { email } });
+
+        if (!user) {
+            // 신규 가입 처리
+            user = this.userRepo.create({
+                email,
+                nickname: name || `user_${Date.now()}`, // 이름 없으면 임시 닉네임
+                password: '', // 소셜 로그인은 패스워드 공백
+                provider: 'google',
+            });
+            await this.userRepo.save(user);
+        }
+
+        const payload = { sub: user.id, email: user.email };
+        return this.jwtService.sign(payload, { expiresIn: '7d' });
     }
 }

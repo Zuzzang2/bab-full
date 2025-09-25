@@ -22,6 +22,9 @@ export class User {
     @Column({ unique: true })
     nickname: string;
 
+    @Column({ type: 'varchar', length: 20, default: 'local' })
+    provider: string;
+
     @CreateDateColumn()
     createdAt: Date;
 
