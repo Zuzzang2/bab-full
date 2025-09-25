@@ -9,6 +9,7 @@ import MyRestaurants from './pages/Restaurants/MyRestaurants';
 import CreateList from './pages/Restaurants/CreateList';
 import { AuthProvider } from './contexts/AuthContext';
 import RestaurantDetail from './pages/Restaurants/RestaurantDetail';
+import SocialSignup from './pages/Auth/SocialSignup';
 
 function App() {
     return (
@@ -18,6 +19,11 @@ function App() {
                     <Routes>
                         <Route path="/" element={<Home />} />
                         <Route path="/signup" element={<Signup />} />
+                        <Route
+                            path="/signup/social"
+                            element={<SocialSignup />}
+                        />
+
                         <Route path="/login" element={<Login />} />
                         <Route
                             path="/my-restaurants"

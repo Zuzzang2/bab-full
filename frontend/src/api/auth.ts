@@ -48,3 +48,8 @@ export const loginUser = async (
 export const logoutUser = async (): Promise<void> => {
     await api.post('/auth/signout');
 };
+
+export const completeGoogleSignup = async (nickname: string) => {
+    const res = await api.post('/auth/google/complete', { nickname });
+    return res.data;
+};
