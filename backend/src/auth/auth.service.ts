@@ -76,4 +76,31 @@ export class AuthService {
         const payload = { sub: user.id, email: user.email };
         return this.jwtService.sign(payload, { expiresIn: '7d' });
     }
+
+    async completeGoogleSignup(
+        email: string,
+        nickname: string,
+    ): Promise<string> {
+        const exists = await this.userRepo.findOne({
+            where: [{ email }, { nickname }],
+        });
+
+        if (exists) {
+            throw new ConflictException(
+                '이미 사용 중인 이메일 또는 닉네임입니다.',
+            );
+        }
+
+        const user = this.userRepo.create({
+            email,
+            nickname,
+            password: '', // 소셜 로그인은 패스워드 없음
+            provider: 'google',
+        });
+
+        await this.userRepo.save(user);
+
+        const payload = { sub: user.id, email: user.email };
+        return this.jwtService.sign(payload, { expiresIn: '7d' });
+    }
 }

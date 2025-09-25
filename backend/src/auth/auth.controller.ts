@@ -6,6 +6,7 @@ import {
     Get,
     UseGuards,
     Req,
+    UnauthorizedException,
 } from '@nestjs/common';
 import type { Response } from 'express';
 import { AuthService } from './auth.service';
@@ -76,22 +77,44 @@ export class AuthController {
         @Req() req,
         @Res({ passthrough: true }) res: Response,
     ) {
-        // 구글 로그인 성공 → 사용자 정보는 req.user 에 있음
-        const userInfo = req.user;
+        const { email } = req.user;
 
-        // 로그인 또는 회원가입 처리 → JWT 발급
-        const token = await this.authService.oauthLogin(userInfo);
+        //회원가입은 하지 않고 email만 저장
+        res.cookie('google_email', email, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'none',
+            maxAge: 1000 * 60 * 5, // 5분 이내 닉네임 입력
+        });
 
-        // JWT를 쿠키에 저장 (secure, httpOnly 설정 포함)
+        // 프론트엔드로 리디렉션 (닉네임 입력 폼 페이지)
+        res.redirect('http://localhost:5173/set-nickname');
+    }
+
+    @Post('google/complete')
+    async completeGoogle(
+        @Req() req,
+        @Res({ passthrough: true }) res: Response,
+        @Body() body: { nickname: string },
+    ) {
+        const email = req.cookies['google_email'];
+        if (!email)
+            throw new UnauthorizedException('OAuth 세션이 만료되었습니다.');
+
+        const token = await this.authService.completeGoogleSignup(
+            email,
+            body.nickname,
+        );
+
+        // 쿠키 처리
+        res.clearCookie('google_email');
         res.cookie('access_token', token, {
             httpOnly: true,
             secure: true,
             sameSite: 'none',
             maxAge: 1000 * 60 * 60 * 24 * 7,
         });
-        return { message: '구글 로그인 성공!' };
-    }
 
-    // 구글 계정에서 동일 이메일인데 일반 회원가입으로 이미 가입된 경우, 소셜 로그인도 허용할까요?
-    // 아니면 provider: 'google' 이어야만 로그인 허용할까요?
+        return { message: '회원가입 완료' };
+    }
 }
