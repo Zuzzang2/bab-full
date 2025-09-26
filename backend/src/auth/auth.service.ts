@@ -86,9 +86,7 @@ export class AuthService {
         });
 
         if (exists) {
-            throw new ConflictException(
-                '이미 사용 중인 이메일 또는 닉네임입니다.',
-            );
+            throw new ConflictException('이미 사용 중인 닉네임입니다.');
         }
 
         const user = this.userRepo.create({
@@ -102,5 +100,21 @@ export class AuthService {
 
         const payload = { sub: user.id, email: user.email };
         return this.jwtService.sign(payload, { expiresIn: '7d' });
+    }
+
+    async handleGoogleOAuthCallback(
+        email: string,
+    ): Promise<{ isNewUser: boolean; token?: string }> {
+        const user = await this.userRepo.findOne({ where: { email } });
+
+        if (user) {
+            const token = this.jwtService.sign(
+                { sub: user.id, email: user.email },
+                { expiresIn: '7d' },
+            );
+            return { isNewUser: false, token };
+        }
+
+        return { isNewUser: true };
     }
 }

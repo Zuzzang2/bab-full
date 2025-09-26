@@ -13,10 +13,14 @@ import { AuthService } from './auth.service';
 import { SignupDto } from './dto/signup.dto';
 import { SigninDto } from './dto/signin.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('auth')
 export class AuthController {
-    constructor(private authService: AuthService) {}
+    constructor(
+        private authService: AuthService,
+        private config: ConfigService,
+    ) {}
 
     @Post('signup')
     async signup(
@@ -79,16 +83,31 @@ export class AuthController {
     ) {
         const { email } = req.user;
 
-        //회원가입은 하지 않고 email만 저장
-        res.cookie('google_email', email, {
+        const { isNewUser, token } =
+            await this.authService.handleGoogleOAuthCallback(email);
+
+        const clientUrl = this.config.get('CLIENT_REDIRECT_URL');
+        const signupUrl = this.config.get('CLIENT_SOCIAL_SIGNUP_URL');
+
+        if (isNewUser) {
+            // 신규 유저: 닉네임 입력 페이지로 이동
+            res.cookie('google_email', email, {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'none',
+                maxAge: 1000 * 60 * 5,
+            });
+            return res.redirect(`${signupUrl}`);
+        }
+
+        // 기존 유저: 바로 로그인 처리
+        res.cookie('access_token', token, {
             httpOnly: true,
             secure: true,
             sameSite: 'none',
-            maxAge: 1000 * 60 * 5, // 5분 이내 닉네임 입력
+            maxAge: 1000 * 60 * 60 * 24 * 7,
         });
-
-        // 프론트엔드로 리디렉션 (닉네임 입력 폼 페이지)
-        res.redirect('http://localhost:5173/set-nickname');
+        return res.redirect(`${clientUrl}`);
     }
 
     @Post('google/complete')
