@@ -117,4 +117,20 @@ export class AuthService {
 
         return { isNewUser: true };
     }
+
+    async handleNaverOAuthCallback(
+        email: string,
+    ): Promise<{ isNewUser: boolean; token?: string }> {
+        const user = await this.userRepo.findOne({ where: { email } });
+
+        if (user) {
+            const token = this.jwtService.sign(
+                { sub: user.id, email: user.email },
+                { expiresIn: '7d' },
+            );
+            return { isNewUser: false, token };
+        }
+
+        return { isNewUser: true };
+    }
 }
