@@ -26,6 +26,18 @@ function Login() {
         }
     };
 
+    const handleGoogleLogin = () => {
+        window.location.href = `${
+            import.meta.env.VITE_API_BASE_URL
+        }/auth/google`;
+    };
+
+    const handleNaverLogin = () => {
+        window.location.href = `${
+            import.meta.env.VITE_API_BASE_URL
+        }/auth/naver`;
+    };
+
     useEffect(() => {
         if (!isLoading && user) {
             alert('이미 로그인된 상태입니다.');
@@ -66,6 +78,34 @@ function Login() {
                     로그인
                 </button>
             </form>
+
+            {/* 소셜 로그인 구역 */}
+            <div className="my-6 border-t pt-4">
+                <button
+                    onClick={handleGoogleLogin}
+                    className="flex items-center justify-center w-full border bg-white px-4 py-3 rounded hover:bg-gray-100 transition mb-3"
+                >
+                    <img
+                        src="/images/google.png"
+                        alt="Google"
+                        className="w-5 h-5 mr-2"
+                    />
+                    <span className="text-sm text-gray-700 font-medium">
+                        Google로 로그인
+                    </span>
+                </button>
+
+                <button
+                    onClick={handleNaverLogin}
+                    className="flex items-center justify-center w-full border px-4 py-3 rounded hover:bg-green-100 transition"
+                >
+                    <img src="/images/naver.png" className="w-6 h-6 mr-2" />
+                    <span className="text-sm text-green-700 font-semibold">
+                        Naver로 로그인
+                    </span>
+                </button>
+            </div>
+
             {error && <p className="text-red-500 mt-2">{error}</p>}
         </div>
     );
