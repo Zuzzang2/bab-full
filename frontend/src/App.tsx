@@ -12,44 +12,29 @@ import RestaurantDetail from './pages/Restaurants/RestaurantDetail';
 import SocialSignup from './pages/Auth/SocialSignup';
 
 function App() {
-    return (
-        <AuthProvider>
-            <BrowserRouter>
-                <Layout>
-                    <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/signup" element={<Signup />} />
-                        <Route
-                            path="/signup/social"
-                            element={<SocialSignup />}
-                        />
+  return (
+    <AuthProvider>
+      <BrowserRouter>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/signup/social" element={<SocialSignup />} />
 
-                        <Route path="/login" element={<Login />} />
-                        <Route
-                            path="/my-restaurants"
-                            element={<MyRestaurants />}
-                        />
-                        <Route
-                            path="/restaurants/search"
-                            element={<Search />}
-                        />
-                        <Route
-                            path="/restaurants/results"
-                            element={<SearchResults />}
-                        />
-                        <Route
-                            path="/restaurants/:id"
-                            element={<RestaurantDetail />}
-                        />
-                        <Route
-                            path="/my-restaurants/create-list"
-                            element={<CreateList />}
-                        />
-                    </Routes>
-                </Layout>
-            </BrowserRouter>
-        </AuthProvider>
-    );
+            <Route path="/login" element={<Login />} />
+            <Route path="/my-restaurants" element={<MyRestaurants />} />
+            <Route path="/restaurants/search" element={<Search />} />
+            <Route path="/restaurants/results" element={<SearchResults />} />
+            <Route path="/restaurants/:id" element={<RestaurantDetail />} />
+            <Route
+              path="/my-restaurants/create-list"
+              element={<CreateList />}
+            />
+          </Routes>
+        </Layout>
+      </BrowserRouter>
+    </AuthProvider>
+  );
 }
 
 export default App;
