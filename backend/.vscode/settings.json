@@ -1,0 +1,10 @@
+{
+    "editor.tabSize": 2,
+    "prettier.tabWidth": 2,
+    "php.validate.executablePath": "",
+    "[typescript]": {
+        "editor.tabSize": 2
+    },
+    "editor.formatOnSave": true,
+    "notebook.defaultFormatter": "esbenp.prettier-vscode"
+}

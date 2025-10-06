@@ -5,7 +5,7 @@ import { RestaurantListItemsEntity } from '../entity/restaurant-list-items';
 
 @Injectable()
 export class RestaurantListItemsRepository extends Repository<RestaurantListItemsEntity> {
-    constructor(private readonly dataSource: DataSource) {
-        super(RestaurantListItemsEntity, dataSource.createEntityManager());
-    }
+  constructor(private readonly dataSource: DataSource) {
+    super(RestaurantListItemsEntity, dataSource.createEntityManager());
+  }
 }

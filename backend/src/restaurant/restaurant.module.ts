@@ -12,21 +12,21 @@ import { RestaurantListsRepository } from './repository/restaurant-lists.reposit
 import { RestaurantListItemsRepository } from './repository/restaurant-list-items.repository';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([
-            RestaurantEntity,
-            RestaurantListsEntity,
-            RestaurantListItemsEntity,
-        ]),
-    ],
-    controllers: [RestaurantController],
-    providers: [
-        RestaurantService,
-        RestaurantListsService,
-        RestaurantListItemsService,
-        RestaurantRepository,
-        RestaurantListsRepository,
-        RestaurantListItemsRepository,
-    ],
+  imports: [
+    TypeOrmModule.forFeature([
+      RestaurantEntity,
+      RestaurantListsEntity,
+      RestaurantListItemsEntity,
+    ]),
+  ],
+  controllers: [RestaurantController],
+  providers: [
+    RestaurantService,
+    RestaurantListsService,
+    RestaurantListItemsService,
+    RestaurantRepository,
+    RestaurantListsRepository,
+    RestaurantListItemsRepository,
+  ],
 })
 export class RestaurantModule {}

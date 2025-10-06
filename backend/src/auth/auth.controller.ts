@@ -1,12 +1,12 @@
 import {
-    Controller,
-    Post,
-    Body,
-    Res,
-    Get,
-    UseGuards,
-    Req,
-    UnauthorizedException,
+  Controller,
+  Post,
+  Body,
+  Res,
+  Get,
+  UseGuards,
+  Req,
+  UnauthorizedException,
 } from '@nestjs/common';
 import type { Response } from 'express';
 import { AuthService } from './auth.service';
@@ -17,188 +17,186 @@ import { ConfigService } from '@nestjs/config';
 
 @Controller('auth')
 export class AuthController {
-    constructor(
-        private authService: AuthService,
-        private config: ConfigService,
-    ) {}
+  constructor(
+    private authService: AuthService,
+    private config: ConfigService,
+  ) {}
 
-    @Get('google/callback')
-    @UseGuards(AuthGuard('google'))
-    async googleAuthRedirect(
-        @Req() req,
-        @Res({ passthrough: true }) res: Response,
-    ) {
-        const { email } = req.user;
+  @Get('google/callback')
+  @UseGuards(AuthGuard('google'))
+  async googleAuthRedirect(
+    @Req() req,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { email } = req.user;
 
-        const { isNewUser, token } =
-            await this.authService.handleGoogleOAuthCallback(email);
+    const { isNewUser, token } =
+      await this.authService.handleGoogleOAuthCallback(email);
 
-        const clientUrl = this.config.get('CLIENT_REDIRECT_URL');
-        const signupUrl = this.config.get('CLIENT_SOCIAL_SIGNUP_URL');
+    const clientUrl = this.config.get('CLIENT_REDIRECT_URL');
+    const signupUrl = this.config.get('CLIENT_SOCIAL_SIGNUP_URL');
 
-        if (isNewUser) {
-            // 신규 유저: 닉네임 입력 페이지로 이동
-            res.cookie('google_email', email, {
-                httpOnly: true,
-                secure: true,
-                sameSite: 'none',
-                maxAge: 1000 * 60 * 5,
-            });
-            return res.redirect(`${signupUrl}`);
-        }
-
-        // 기존 유저: 바로 로그인 처리
-        res.cookie('access_token', token, {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            maxAge: 1000 * 60 * 60 * 24 * 7,
-        });
-        return res.redirect(`${clientUrl}`);
+    if (isNewUser) {
+      // 신규 유저: 닉네임 입력 페이지로 이동
+      res.cookie('google_email', email, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+        maxAge: 1000 * 60 * 5,
+      });
+      return res.redirect(`${signupUrl}`);
     }
 
-    @Post('google/complete')
-    async completeGoogle(
-        @Req() req,
-        @Res({ passthrough: true }) res: Response,
-        @Body() body: { nickname: string },
-    ) {
-        const email = req.cookies['google_email'];
-        if (!email)
-            throw new UnauthorizedException('OAuth 세션이 만료되었습니다.');
+    // 기존 유저: 바로 로그인 처리
+    res.cookie('access_token', token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+    });
+    return res.redirect(`${clientUrl}`);
+  }
 
-        const token = await this.authService.completeGoogleSignup(
-            email,
-            body.nickname,
-        );
+  @Post('google/complete')
+  async completeGoogle(
+    @Req() req,
+    @Res({ passthrough: true }) res: Response,
+    @Body() body: { nickname: string },
+  ) {
+    const email = req.cookies['google_email'];
+    if (!email) throw new UnauthorizedException('OAuth 세션이 만료되었습니다.');
 
-        // 쿠키 처리
-        res.clearCookie('google_email');
-        res.cookie('access_token', token, {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            maxAge: 1000 * 60 * 60 * 24 * 7,
-        });
+    const token = await this.authService.completeGoogleSignup(
+      email,
+      body.nickname,
+    );
 
-        return { message: '회원가입 완료' };
+    // 쿠키 처리
+    res.clearCookie('google_email');
+    res.cookie('access_token', token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+    });
+
+    return { message: '회원가입 완료' };
+  }
+
+  @Get('naver/callback')
+  @UseGuards(AuthGuard('naver'))
+  async naverAuthRedirect(
+    @Req() req,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { email } = req.user;
+
+    const { isNewUser, token } =
+      await this.authService.handleNaverOAuthCallback(email);
+
+    const clientUrl = this.config.get('CLIENT_REDIRECT_URL');
+    const signupUrl = this.config.get('CLIENT_SOCIAL_SIGNUP_URL');
+
+    if (isNewUser) {
+      // 신규 유저: 닉네임 입력 페이지로 이동
+      res.cookie('naver_email', email, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+        maxAge: 1000 * 60 * 5,
+      });
+      return res.redirect(`${signupUrl}`);
     }
 
-    @Get('naver/callback')
-    @UseGuards(AuthGuard('naver'))
-    async naverAuthRedirect(
-        @Req() req,
-        @Res({ passthrough: true }) res: Response,
-    ) {
-        const { email } = req.user;
+    // 기존 유저: 바로 로그인 처리
+    res.cookie('access_token', token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+    });
+    return res.redirect(`${clientUrl}`);
+  }
 
-        const { isNewUser, token } =
-            await this.authService.handleNaverOAuthCallback(email);
+  @Post('naver/complete')
+  async completeNaver(
+    @Req() req,
+    @Res({ passthrough: true }) res: Response,
+    @Body() body: { nickname: string },
+  ) {
+    const email = req.cookies['naver_email'];
+    if (!email) throw new UnauthorizedException('OAuth 세션이 만료되었습니다.');
 
-        const clientUrl = this.config.get('CLIENT_REDIRECT_URL');
-        const signupUrl = this.config.get('CLIENT_SOCIAL_SIGNUP_URL');
+    const token = await this.authService.completeGoogleSignup(
+      email,
+      body.nickname,
+    );
 
-        if (isNewUser) {
-            // 신규 유저: 닉네임 입력 페이지로 이동
-            res.cookie('naver_email', email, {
-                httpOnly: true,
-                secure: true,
-                sameSite: 'none',
-                maxAge: 1000 * 60 * 5,
-            });
-            return res.redirect(`${signupUrl}`);
-        }
+    res.clearCookie('naver_email');
+    res.cookie('access_token', token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+    });
 
-        // 기존 유저: 바로 로그인 처리
-        res.cookie('access_token', token, {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            maxAge: 1000 * 60 * 60 * 24 * 7,
-        });
-        return res.redirect(`${clientUrl}`);
-    }
+    return { message: '회원가입 완료' };
+  }
 
-    @Post('naver/complete')
-    async completeNaver(
-        @Req() req,
-        @Res({ passthrough: true }) res: Response,
-        @Body() body: { nickname: string },
-    ) {
-        const email = req.cookies['naver_email'];
-        if (!email)
-            throw new UnauthorizedException('OAuth 세션이 만료되었습니다.');
+  // Google 로그인 화면으로 리디렉션
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  async googleAuth() {}
 
-        const token = await this.authService.completeGoogleSignup(
-            email,
-            body.nickname,
-        );
+  // Naver 로그인 화면으로 리디렉션
+  @Get('naver')
+  @UseGuards(AuthGuard('naver'))
+  async naverAuth() {}
 
-        res.clearCookie('naver_email');
-        res.cookie('access_token', token, {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            maxAge: 1000 * 60 * 60 * 24 * 7,
-        });
+  @Post('signup')
+  async signup(
+    @Res({ passthrough: true }) res: Response,
+    @Body() dto: SignupDto,
+  ) {
+    const token = await this.authService.signup(dto);
 
-        return { message: '회원가입 완료' };
-    }
+    res.cookie('access_token', token, {
+      httpOnly: true,
+      // secure: false, // HTTPS 환경에서만..인데 sameSite 때문에 true
+      secure: true,
+      sameSite: 'none',
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+    });
 
-    // Google 로그인 화면으로 리디렉션
-    @Get('google')
-    @UseGuards(AuthGuard('google'))
-    async googleAuth() {}
+    return { message: '회원가입 성공!' };
+  }
 
-    // Naver 로그인 화면으로 리디렉션
-    @Get('naver')
-    @UseGuards(AuthGuard('naver'))
-    async naverAuth() {}
+  @Post('signin')
+  async signin(
+    @Res({ passthrough: true }) res: Response,
+    @Body() dto: SigninDto,
+  ) {
+    const token = await this.authService.signin(dto);
 
-    @Post('signup')
-    async signup(
-        @Res({ passthrough: true }) res: Response,
-        @Body() dto: SignupDto,
-    ) {
-        const token = await this.authService.signup(dto);
+    res.cookie('access_token', token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+    });
 
-        res.cookie('access_token', token, {
-            httpOnly: true,
-            // secure: false, // HTTPS 환경에서만..인데 sameSite 때문에 true
-            secure: true,
-            sameSite: 'none',
-            maxAge: 1000 * 60 * 60 * 24 * 7,
-        });
+    return { message: '로그인 성공!' };
+  }
 
-        return { message: '회원가입 성공!' };
-    }
+  @Post('signout')
+  async signout(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie('access_token', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+    });
 
-    @Post('signin')
-    async signin(
-        @Res({ passthrough: true }) res: Response,
-        @Body() dto: SigninDto,
-    ) {
-        const token = await this.authService.signin(dto);
-
-        res.cookie('access_token', token, {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            maxAge: 1000 * 60 * 60 * 24 * 7,
-        });
-
-        return { message: '로그인 성공!' };
-    }
-
-    @Post('signout')
-    async signout(@Res({ passthrough: true }) res: Response) {
-        res.clearCookie('access_token', {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            maxAge: 1000 * 60 * 60 * 24 * 7,
-        });
-
-        return { message: '로그아웃 성공!' };
-    }
+    return { message: '로그아웃 성공!' };
+  }
 }

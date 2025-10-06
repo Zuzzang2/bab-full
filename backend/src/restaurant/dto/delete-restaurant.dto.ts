@@ -2,7 +2,7 @@ import { Type } from 'class-transformer';
 import { IsInt } from 'class-validator';
 
 export class DeleteRestaurantDto {
-    @Type(() => Number)
-    @IsInt()
-    id: number;
+  @Type(() => Number)
+  @IsInt()
+  id: number;
 }
