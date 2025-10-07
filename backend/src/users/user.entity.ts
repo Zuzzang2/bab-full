@@ -25,6 +25,9 @@ export class User {
   @Column({ type: 'varchar', length: 20, default: 'local' })
   provider: string;
 
+  @Column({ nullable: true })
+  profileImage?: string;
+
   @CreateDateColumn()
   createdAt: Date;
 
