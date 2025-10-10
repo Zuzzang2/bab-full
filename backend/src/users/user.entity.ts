@@ -26,7 +26,7 @@ export class User {
   provider: string;
 
   @Column({ nullable: true })
-  profileImage?: string;
+  profileImageUrl?: string;
 
   @CreateDateColumn()
   createdAt: Date;

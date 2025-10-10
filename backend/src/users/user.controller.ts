@@ -27,8 +27,15 @@ export class UserController {
   }
 
   @Get('/me')
-  getProfile(@Req() req) {
-    return req.user;
+  async getProfile(@Req() req) {
+    const user = await this.userService.findById(req.user.userId);
+    return {
+      id: user.id,
+      email: user.email,
+      nickname: user.nickname,
+      profileImageUrl: user.profileImageUrl,
+      provider: user.provider,
+    };
   }
 
   @Delete('/me')

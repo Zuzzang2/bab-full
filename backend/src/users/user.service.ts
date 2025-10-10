@@ -19,6 +19,19 @@ export class UserService {
     private readonly supabase: SupabaseService,
   ) {}
 
+  async findById(userId: number): Promise<User> {
+    const user = await this.userRepo.findOne({
+      where: { id: userId },
+      select: ['id', 'email', 'nickname', 'profileImageUrl', 'provider'],
+    });
+
+    if (!user) {
+      throw new NotFoundException('사용자를 찾을 수 없습니다.');
+    }
+
+    return user;
+  }
+
   async updateNickname(userId: number, newNickname: string) {
     const exists = await this.userRepo.findOne({
       where: { nickname: newNickname },
@@ -52,7 +65,7 @@ export class UserService {
       throw new NotFoundException('해당 사용자를 찾을 수 없습니다.');
     }
 
-    const oldUrl = user.profileImage;
+    const oldUrl = user.profileImageUrl;
     const oldFileName = oldUrl?.split('/').pop();
 
     // 2. 기존 이미지가 있으면 삭제
@@ -94,7 +107,7 @@ export class UserService {
       .getPublicUrl(fileName);
 
     // 5. DB에 저장
-    await this.userRepo.update(userId, { profileImage: data.publicUrl });
+    await this.userRepo.update(userId, { profileImageUrl: data.publicUrl });
 
     return {
       message: '프로필 이미지가 업로드되었습니다.',
