@@ -10,6 +10,7 @@ import CreateList from './pages/Restaurants/CreateList';
 import { AuthProvider } from './contexts/AuthContext';
 import RestaurantDetail from './pages/Restaurants/RestaurantDetail';
 import SocialSignup from './pages/Auth/SocialSignup';
+import MyPage from './pages/Auth/Mypage';
 
 function App() {
   return (
@@ -20,7 +21,6 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/signup/social" element={<SocialSignup />} />
-
             <Route path="/login" element={<Login />} />
             <Route path="/my-restaurants" element={<MyRestaurants />} />
             <Route path="/restaurants/search" element={<Search />} />
@@ -30,6 +30,7 @@ function App() {
               path="/my-restaurants/create-list"
               element={<CreateList />}
             />
+            <Route path="/mypage" element={<MyPage />} />
           </Routes>
         </Layout>
       </BrowserRouter>

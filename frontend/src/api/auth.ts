@@ -2,7 +2,7 @@ import api from '@/api/axiosInstance';
 import { User } from '@/types/user';
 
 export const fetchUser = async (): Promise<User> => {
-  const res = await api.get('/user/me', {});
+  const res = await api.get('/user/me');
   return res.data;
 };
 
@@ -51,5 +51,26 @@ export const logoutUser = async (): Promise<void> => {
 
 export const completeGoogleSignup = async (nickname: string) => {
   const res = await api.post('/auth/google/complete', { nickname });
+  return res.data;
+};
+
+export const updateNickname = async (
+  nickname: string,
+): Promise<{ message: string }> => {
+  const res = await api.patch('/user/nickname', { nickname });
+  return res.data;
+};
+
+export const uploadProfileImage = async (file: File) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  const res = await api.patch('/user/profile-image', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+  return res.data;
+};
+
+export const deleteProfile = async (): Promise<{ message: string }> => {
+  const res = await api.delete('/users/me');
   return res.data;
 };
