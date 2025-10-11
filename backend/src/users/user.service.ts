@@ -89,6 +89,7 @@ export class UserService {
       });
 
     if (error) {
+      console.error('🔥 Supabase 업로드 오류:', error);
       if (error.message.includes('file size')) {
         throw new BadRequestException(
           '업로드 가능한 파일 크기는 최대 5MB입니다.',

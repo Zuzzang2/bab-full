@@ -23,12 +23,13 @@ export class UserController {
 
   @Patch('/nickname')
   updateNickname(@Req() req, @Body() dto: UpdateNicknameDto) {
-    return this.userService.updateNickname(req.user.id, dto.nickname);
+    return this.userService.updateNickname(req.user.userId, dto.nickname);
   }
 
   @Get('/me')
   async getProfile(@Req() req) {
     const user = await this.userService.findById(req.user.userId);
+    console.log('아이디:', req.user.userId);
     return {
       id: user.id,
       email: user.email,
@@ -40,12 +41,12 @@ export class UserController {
 
   @Delete('/me')
   deleteProfile(@Req() req) {
-    return this.userService.deleteProfile(req.user.id);
+    return this.userService.deleteProfile(req.user.userId);
   }
 
   @Patch('/profile-image')
   @UseInterceptors(FileInterceptor('file'))
   uplodeProfileImage(@UploadedFile() file: Multer.File, @Req() req) {
-    return this.userService.uploadProfileImage(req.user.id, file);
+    return this.userService.uploadProfileImage(req.user.userId, file);
   }
 }
