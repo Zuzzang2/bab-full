@@ -1,15 +1,24 @@
 // src/pages/CreateList.tsx
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createMyRestaurantList } from '@/api/restaurant';
 import { CreateRestaurantListDto } from '@/types/restaurant';
+import { useAuth } from '@/contexts/AuthContext';
 
 function CreateList() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { user, isLoading } = useAuth();
+
+  useEffect(() => {
+    if (!isLoading && !user) {
+      alert('로그인이 필요합니다.');
+      navigate('/login');
+    }
+  }, [isLoading, user]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

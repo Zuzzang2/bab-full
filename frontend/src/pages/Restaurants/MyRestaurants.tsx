@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
   fetchMyRestaurants,
   deleteMyRestaurantById,
@@ -14,6 +13,8 @@ import {
   RestaurantListResponse,
 } from '@/types/restaurant';
 import RestaurantItem from '@/components/RestaurantItem';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 type SortType = 'latest' | 'oldest' | 'title';
 
@@ -30,9 +31,19 @@ function MyRestaurants() {
   const [selectedListTitle, setSelectedListTitle] = useState<string | null>(
     null,
   );
+  const { user, isLoading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLoading && !user) {
+      alert('로그인이 필요합니다.');
+      navigate('/login');
+    }
+  }, [isLoading, user]);
 
   // 리스트 목록 가져오기 (최초 1회)
   useEffect(() => {
+    if (!user) return;
     const loadLists = async () => {
       try {
         const data = await fetchMyLists();

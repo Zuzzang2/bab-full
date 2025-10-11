@@ -9,12 +9,19 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 function MyPage() {
-  const { user, setUser } = useAuth();
+  const { user, setUser, isLoading } = useAuth();
   const [nickname, setNickname] = useState('');
   const [preview, setPreview] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!isLoading && !user) {
+      alert('로그인이 필요합니다.');
+      navigate('/login');
+    }
+  }, [isLoading, user]);
 
   useEffect(() => {
     const loadProfile = async () => {
