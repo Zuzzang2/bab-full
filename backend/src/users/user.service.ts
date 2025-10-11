@@ -70,10 +70,14 @@ export class UserService {
 
     // 2. 기존 이미지가 있으면 삭제
     if (oldFileName) {
-      await this.supabase
-        .getClient()
-        .storage.from(bucket)
-        .remove([oldFileName]);
+      try {
+        await this.supabase
+          .getClient()
+          .storage.from(bucket)
+          .remove([oldFileName]);
+      } catch (removeError) {
+        console.warn('기존 이미지 삭제 실패 (무시):', removeError.message);
+      }
     }
 
     // 3. 새 이미지 업로드
