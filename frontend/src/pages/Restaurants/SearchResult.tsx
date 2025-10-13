@@ -4,7 +4,7 @@ import {
   createMyRestaurant,
   fetchRestaurantsSavedByUserId,
   searchAllRestaurants,
-} from '@/api/restaurant';
+} from '@/apis/restaurant';
 import { CreateRestaurantDto, RestaurantResponse } from '@/types/restaurant';
 
 function SearchResults() {

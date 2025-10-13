@@ -1,4 +1,4 @@
-import { fetchMyLists, createMyRestaurantToList } from '@/api/restaurant';
+import { fetchMyLists, createMyRestaurantToList } from '@/apis/restaurant';
 import { IncludedList, RestaurantList } from '@/types/restaurant';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';

@@ -1,4 +1,4 @@
-import api from '@/api/axiosInstance';
+import api from '@/apis/axiosInstance';
 import { User } from '@/types/user';
 
 export const fetchUser = async (): Promise<User> => {
@@ -42,6 +42,7 @@ export const loginUser = async (
   password: string,
 ): Promise<{ message: string }> => {
   const res = await api.post('/auth/signin', { email, password });
+
   return res.data;
 };
 

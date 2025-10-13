@@ -6,7 +6,7 @@ import {
   fetchMyListRestaurants,
   deleteRestaurantFromList,
   createMyRestaurantToList,
-} from '@/api/restaurant';
+} from '@/apis/restaurant';
 import {
   RestaurantResponse,
   RestaurantList,

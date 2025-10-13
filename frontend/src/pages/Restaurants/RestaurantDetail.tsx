@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchMyRestaurantDetailById } from '@/api/restaurant';
+import { fetchMyRestaurantDetailById } from '@/apis/restaurant';
 import KakaoMap from '@/components/KakaoMap';
 import { RestaurantResponse } from '@/types/restaurant';
 

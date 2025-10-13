@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import api from '@/api/axiosInstance';
+import api from '@/apis/axiosInstance';
 import { useNavigate } from 'react-router-dom';
-import { completeGoogleSignup } from '@/api/auth';
+import { completeGoogleSignup } from '@/apis/auth';
 
 export default function SocialSignup() {
   const [nickname, setNickname] = useState('');

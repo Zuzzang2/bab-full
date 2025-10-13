@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { signupUser, loginUser, fetchUser } from '@/api/auth';
+import { signupUser, loginUser, fetchUser } from '@/apis/auth';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function Signup() {

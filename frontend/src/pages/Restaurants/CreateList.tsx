@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createMyRestaurantList } from '@/api/restaurant';
+import { createMyRestaurantList } from '@/apis/restaurant';
 import { CreateRestaurantListDto } from '@/types/restaurant';
 import { useAuth } from '@/contexts/AuthContext';
 

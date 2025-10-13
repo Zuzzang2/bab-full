@@ -5,7 +5,7 @@ import {
   useEffect,
   ReactNode,
 } from 'react';
-import { fetchUser, logoutUser } from '@/api/auth';
+import { fetchUser, logoutUser } from '@/apis/auth';
 import { User } from '@/types/user';
 
 interface AuthContextType {

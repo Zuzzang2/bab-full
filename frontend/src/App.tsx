@@ -11,6 +11,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import RestaurantDetail from './pages/Restaurants/RestaurantDetail';
 import SocialSignup from './pages/Auth/SocialSignup';
 import MyPage from './pages/Auth/Mypage';
+import GuestOnlyRoute from './routes/GuestOnlyRoute';
 
 function App() {
   return (
@@ -19,9 +20,23 @@ function App() {
         <Layout>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/signup" element={<Signup />} />
+            <Route
+              path="/signup"
+              element={
+                <GuestOnlyRoute>
+                  <Signup />
+                </GuestOnlyRoute>
+              }
+            />
             <Route path="/signup/social" element={<SocialSignup />} />
-            <Route path="/login" element={<Login />} />
+            <Route
+              path="/login"
+              element={
+                <GuestOnlyRoute>
+                  <Login />
+                </GuestOnlyRoute>
+              }
+            />
             <Route path="/my-restaurants" element={<MyRestaurants />} />
             <Route path="/restaurants/search" element={<Search />} />
             <Route path="/restaurants/results" element={<SearchResults />} />

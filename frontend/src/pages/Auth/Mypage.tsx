@@ -5,7 +5,7 @@ import {
   updateNickname,
   uploadProfileImage,
   deleteProfile,
-} from '@/api/auth';
+} from '@/apis/auth';
 import { useNavigate } from 'react-router-dom';
 
 function MyPage() {
