@@ -7,7 +7,7 @@ function Login() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
-  const { user, setUser, isLoading } = useAuth(); // Context에서 상태 가져옴
+  const { refreshUser } = useAuth(); // Context에서 상태 가져옴
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -17,10 +17,10 @@ function Login() {
     try {
       await loginUser(email, password);
 
-      // 유저 세팅은 AuthContext가 담당하므로 여기서는 바로 이동
+      // 로그인 직후 Context 강제 갱신
+      await refreshUser();
+
       navigate('/', { replace: true });
-      // 또는 전체 새로고침으로 AuthProvider 강제 재실행
-      // window.location.href = '/';
     } catch (err) {
       setError('로그인 실패. 이메일 또는 비밀번호를 확인하세요.');
     }
@@ -33,19 +33,6 @@ function Login() {
   const handleNaverLogin = () => {
     window.location.href = `${import.meta.env.VITE_API_BASE_URL}/auth/naver`;
   };
-
-  // useEffect(() => {
-  //   if (!isLoading && user && location.pathname === '/login') {
-  //     alert('이미 로그인 된 상태입니다.');
-
-  //     // 이전 페이지가 존재하면 뒤로가기, 아니면 홈으로
-  //     if (location.key !== 'default') {
-  //       navigate(-1);
-  //     } else {
-  //       navigate('/');
-  //     }
-  //   }
-  // }, [user, isLoading, navigate, location]);
 
   return (
     <div className="max-w-sm mx-auto mt-20">

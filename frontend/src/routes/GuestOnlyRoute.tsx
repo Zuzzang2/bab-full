@@ -14,7 +14,6 @@ export default function GuestOnlyRoute({
 
   // 로그인된 유저라면 /login 접근 차단
   if (user) {
-    alert('이미 로그인된 상태입니다.');
     return <Navigate to="/" replace />;
   }
 

@@ -13,6 +13,7 @@ interface AuthContextType {
   setUser: (user: User | null) => void;
   logout: () => Promise<void>;
   isLoading: boolean;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -21,19 +22,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // useEffect(() => {
+  //   const checkAuth = async () => {
+  //     try {
+  //       const userData = await fetchUser();
+  //       setUser(userData);
+  //     } catch (err) {
+  //       console.error('유저 정보를 불러오지 못했습니다:', err);
+  //       setUser(null);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+  //   checkAuth();
+  // }, []);
+
+  const fetchUserData = async () => {
+    try {
+      const userData = await fetchUser();
+      setUser(userData);
+    } catch (err) {
+      console.error('유저 정보를 불러오지 못했습니다:', err);
+      setUser(null);
+    }
+  };
+
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const userData = await fetchUser();
-        setUser(userData);
-      } catch (err) {
-        console.error('유저 정보를 불러오지 못했습니다:', err);
-        setUser(null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    checkAuth();
+    fetchUserData().finally(() => setIsLoading(false));
   }, []);
 
   const logout = async () => {
@@ -45,8 +60,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const refreshUser = async () => {
+    await fetchUserData();
+  };
+
   return (
-    <AuthContext.Provider value={{ user, setUser, logout, isLoading }}>
+    <AuthContext.Provider
+      value={{ user, setUser, logout, isLoading, refreshUser }}
+    >
       {children}
     </AuthContext.Provider>
   );
