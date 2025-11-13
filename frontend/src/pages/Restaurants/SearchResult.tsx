@@ -72,7 +72,7 @@ function SearchResults() {
 
       await createMyRestaurant(payload);
 
-      alert(`"${cleanTitle}"이(가) 저장되었습니다.`);
+      // alert(`"${cleanTitle}"이(가) 저장되었습니다.`);
       setSavedroadAddress((prev) => [...prev, item.roadAddress]); // 버튼 전환
     } catch (err: any) {
       console.error('저장 실패:', err);
@@ -108,7 +108,7 @@ function SearchResults() {
 
               {isSaved ? (
                 <button
-                  className="mt-2 px-3 py-1 bg-gray-400 text-white rounded cursor-not-allowed"
+                  className="mt-2 px-3 py-1 bg-gray-400 text-white rounded"
                   disabled
                 >
                   저장 완료
