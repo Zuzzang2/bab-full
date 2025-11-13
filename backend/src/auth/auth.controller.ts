@@ -194,7 +194,6 @@ export class AuthController {
       httpOnly: true,
       secure: true,
       sameSite: 'none',
-      maxAge: 1000 * 60 * 60 * 24 * 7,
     });
 
     return { message: '로그아웃 성공!' };

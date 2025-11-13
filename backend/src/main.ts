@@ -12,11 +12,19 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   );
+  app.setGlobalPrefix('api');
+
   app.use(cookieParser());
+
+  // CORS 설정
   app.enableCors({
-    origin: 'http://localhost:5173', // Vite 프론트 주소
+    origin: 'http://frontend.test', // Vite 프론트 주소
     credentials: true,
   });
-  await app.listen(process.env.PORT ?? 3000);
+
+  // 포트 설정
+  const port = process.env.PORT ?? 3000;
+  await app.listen(port);
+  console.log(`🚀 Server running on http://localhost:${port}`);
 }
 bootstrap();

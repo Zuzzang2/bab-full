@@ -30,7 +30,7 @@ import { SupabaseModule } from './common/supabase/supabase.module';
           config.get('DB_SSL') === 'true'
             ? { rejectUnauthorized: false }
             : false,
-        synchronize: true, // 개발할 땐 true
+        synchronize: false, // 개발할 땐 true
         autoLoadEntities: true,
       }),
     }),
